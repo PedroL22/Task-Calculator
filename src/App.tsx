@@ -1,9 +1,19 @@
 import { useEffect, useState } from 'react'
 
+import { ClipboardText } from '@phosphor-icons/react/dist/ssr'
+import { toast } from 'sonner'
 import { AddTaskButton } from '~/components/AddTaskButton'
 import { ExportButton } from '~/components/ExportButton'
 import { ResetButton } from '~/components/ResetButton'
 import { TaskRow } from '~/components/TaskRow'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '~/components/ui/dialog'
 
 import { generateRandomID } from '~/utils/generateRandomID'
 
@@ -33,14 +43,19 @@ export const App = () => {
     )
   }
 
-  const handleExportData = () => {
-    const dataToExport = tasks.map(({ code, percentage, time }) => ({ code, percentage, time }))
-    console.log(dataToExport)
-  }
-
   const handleResetData = () => {
     setHoursToWork(8)
     setTasks([{ id: generateRandomID(), code: '', percentage: undefined, time: undefined }])
+  }
+
+  const dataToExport = tasks.map(({ code, percentage, time }) => ({ code, percentage, time }))
+
+  const handleCopyToClipboard = () => {
+    navigator.clipboard.writeText(
+      dataToExport.map((task) => `${task.code}, ${task.percentage}%, ${task.time}`).join('\n')
+    )
+
+    toast.success('Tasks copied to clipboard!')
   }
 
   useEffect(() => {
@@ -66,25 +81,71 @@ export const App = () => {
 
       <div className='mt-10 flex flex-col'>
         <div className='mb-6 flex flex-col space-y-4'>
-          {tasks.map((task) => (
-            <TaskRow
-              key={task.id}
-              id={task.id}
-              code={task.code}
-              percentage={task.percentage}
-              time={task.time}
-              onChange={updateTask}
-              onClose={() => removeTask(task.id)}
-            />
-          ))}
+          {tasks.length ? (
+            tasks.map((task) => (
+              <TaskRow
+                key={task.id}
+                id={task.id}
+                code={task.code}
+                percentage={task.percentage}
+                time={task.time}
+                canDelete={tasks.length > 1}
+                onChange={updateTask}
+                onClose={() => removeTask(task.id)}
+              />
+            ))
+          ) : (
+            <p className='text-2xl'>No tasks added</p>
+          )}
         </div>
 
         <div className='flex items-center space-x-4'>
           <AddTaskButton onClick={addTask} />
 
-          <ExportButton onClick={handleExportData} />
+          <Dialog>
+            <DialogTrigger asChild>
+              <ExportButton
+                disabled={
+                  (tasks.length === 1 && tasks[0].code === '') ||
+                  tasks[0].percentage === undefined ||
+                  tasks[0].time === undefined
+                }
+              />
+            </DialogTrigger>
 
-          <ResetButton onClick={handleResetData} />
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Export tasks</DialogTitle>
+
+                <DialogDescription>
+                  <div className='relative flex select-all flex-col rounded-lg bg-gray-200 p-3 text-black text-xl'>
+                    <button
+                      type='button'
+                      className='absolute top-2 right-2 select-none rounded-full p-1 transition-all ease-in hover:bg-gray-300 active:bg-gray-400'
+                      onClick={handleCopyToClipboard}
+                    >
+                      <ClipboardText size={28} />
+                    </button>
+
+                    {dataToExport.map((task) => (
+                      <p key={task.code}>
+                        {task.code}, {task.percentage}%, {task.time}
+                      </p>
+                    ))}
+                  </div>
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+
+          <ResetButton
+            disabled={
+              (tasks.length === 1 && tasks[0].code === '') ||
+              tasks[0].percentage === undefined ||
+              tasks[0].time === undefined
+            }
+            onClick={handleResetData}
+          />
         </div>
       </div>
     </main>

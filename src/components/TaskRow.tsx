@@ -3,6 +3,7 @@ import { TaskInput } from './TaskInput'
 import type { TaskEntity } from '~/entities/TaskEntity'
 
 type TaskRowProps = TaskEntity & {
+  canDelete: boolean
   onChange: (id: string, key: keyof TaskEntity, value: string | number | undefined) => void
   onClose: () => void
 }
@@ -28,7 +29,12 @@ export const TaskRow = (props: TaskRowProps) => {
         onChange={(e) => props.onChange(props.id, 'time', e.target.value)}
       />
 
-      <button type='button' className='text-4xl' onClick={props.onClose}>
+      <button
+        type='button'
+        disabled={!props.canDelete}
+        className='text-4xl disabled:cursor-not-allowed disabled:opacity-50'
+        onClick={props.onClose}
+      >
         ❌
       </button>
     </div>
