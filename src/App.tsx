@@ -16,38 +16,13 @@ import {
   DialogTrigger,
 } from '~/components/ui/dialog'
 
-import { generateRandomID } from '~/utils/generateRandomID'
-
-import type { TaskEntity } from '~/entities/TaskEntity'
+import { useConfigStore } from '~/store/useConfigStore'
+import { useTaskStore } from '~/store/useTaskStore'
 
 export const App = () => {
-  const [hoursToWork, setHoursToWork] = useState(8)
+  const { hoursToWork, setHoursToWork } = useConfigStore()
+  const { tasks, addTask, removeTask, updateTask, resetTasks } = useTaskStore()
   const [remainingTime, setRemainingTime] = useState(8)
-  const [tasks, setTasks] = useState<TaskEntity[]>([
-    { id: generateRandomID(), code: '', percentage: undefined, time: undefined },
-  ])
-
-  const addTask = () => {
-    setTasks((prevTasks) => [
-      ...prevTasks,
-      { id: generateRandomID(), code: '', percentage: undefined, time: undefined },
-    ])
-  }
-
-  const removeTask = (id: string) => {
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id))
-  }
-
-  const updateTask = (id: string, key: keyof TaskEntity, value: any) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) => (task.id === id ? { ...task, [key]: key === 'time' ? Number(value) : value } : task))
-    )
-  }
-
-  const handleResetData = () => {
-    setHoursToWork(8)
-    setTasks([{ id: generateRandomID(), code: '', percentage: undefined, time: undefined }])
-  }
 
   const dataToExport = tasks.map(({ code, percentage, time }) => ({ code, percentage, time }))
 
@@ -149,7 +124,7 @@ export const App = () => {
               tasks[0].percentage === undefined ||
               tasks[0].time === undefined
             }
-            onClick={handleResetData}
+            onClick={resetTasks}
           />
         </div>
       </div>
