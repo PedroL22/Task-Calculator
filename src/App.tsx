@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { AddTaskButton } from '~/components/AddTaskButton'
 import { ExportButton } from '~/components/ExportButton'
+import { ResetButton } from '~/components/ResetButton'
 import { TaskRow } from '~/components/TaskRow'
 
 import { generateRandomID } from '~/utils/generateRandomID'
@@ -9,7 +10,7 @@ import { generateRandomID } from '~/utils/generateRandomID'
 import type { TaskEntity } from '~/entities/TaskEntity'
 
 export const App = () => {
-  const [hoursToWork, _] = useState(8)
+  const [hoursToWork, setHoursToWork] = useState(8)
   const [remainingTime, setRemainingTime] = useState(8)
   const [tasks, setTasks] = useState<TaskEntity[]>([
     { id: generateRandomID(), code: '', percentage: undefined, time: undefined },
@@ -26,15 +27,20 @@ export const App = () => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id))
   }
 
+  const updateTask = (id: string, key: keyof TaskEntity, value: any) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => (task.id === id ? { ...task, [key]: key === 'time' ? Number(value) : value } : task))
+    )
+  }
+
   const handleExportData = () => {
     const dataToExport = tasks.map(({ code, percentage, time }) => ({ code, percentage, time }))
     console.log(dataToExport)
   }
 
-  const updateTask = (id: string, key: keyof TaskEntity, value: any) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) => (task.id === id ? { ...task, [key]: key === 'time' ? Number(value) : value } : task))
-    )
+  const handleResetData = () => {
+    setHoursToWork(8)
+    setTasks([{ id: generateRandomID(), code: '', percentage: undefined, time: undefined }])
   }
 
   useEffect(() => {
@@ -47,7 +53,15 @@ export const App = () => {
       <div className='space-y-4'>
         <h1 className='font-medium text-5xl'>⏳Remaining time: {remainingTime}</h1>
 
-        <h2 className='font-medium text-4xl'>🕐Hours to work: {hoursToWork}</h2>
+        <h2 className='flex items-center space-x-2 font-medium text-4xl'>
+          <span>🕐Hours to work:</span>
+
+          <input
+            value={hoursToWork}
+            onChange={(e) => setHoursToWork(Number(e.target.value))}
+            className='flex w-14 items-center rounded-xl px-2.5 py-1 text-4xl outline-none focus:border-gray-700 dark:bg-gray-700 dark:text-white'
+          />
+        </h2>
       </div>
 
       <div className='mt-10 flex flex-col'>
@@ -65,10 +79,12 @@ export const App = () => {
           ))}
         </div>
 
-        <div className='flex items-center space-x-6'>
+        <div className='flex items-center space-x-4'>
           <AddTaskButton onClick={addTask} />
 
           <ExportButton onClick={handleExportData} />
+
+          <ResetButton onClick={handleResetData} />
         </div>
       </div>
     </main>
