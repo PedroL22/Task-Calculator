@@ -8,8 +8,9 @@ import { ResetButton } from '~/components/ResetButton'
 import { TaskRow } from '~/components/TaskRow'
 import {
   Dialog,
+  DialogClose,
   DialogContent,
-  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -74,7 +75,7 @@ export const App = () => {
           <input
             value={hoursToWork}
             onChange={(e) => setHoursToWork(Number(e.target.value))}
-            className='flex w-14 items-center rounded-xl px-2.5 py-1 text-4xl outline-none focus:border-gray-700 dark:bg-gray-700 dark:text-white'
+            className='flex w-14 items-center rounded-xl px-2.5 py-1 text-4xl outline-none focus:border-gray-700 dark:bg-gray-700'
           />
         </h2>
       </div>
@@ -95,7 +96,7 @@ export const App = () => {
               />
             ))
           ) : (
-            <p className='text-2xl'>No tasks added</p>
+            <p className='text-2xl'>No tasks added.</p>
           )}
         </div>
 
@@ -113,28 +114,32 @@ export const App = () => {
               />
             </DialogTrigger>
 
-            <DialogContent>
+            <DialogContent className='border-none bg-gray-700'>
               <DialogHeader>
                 <DialogTitle>Export tasks</DialogTitle>
-
-                <DialogDescription>
-                  <div className='relative flex select-all flex-col rounded-lg bg-gray-200 p-3 text-black text-xl'>
-                    <button
-                      type='button'
-                      className='absolute top-2 right-2 select-none rounded-full p-1 transition-all ease-in hover:bg-gray-300 active:bg-gray-400'
-                      onClick={handleCopyToClipboard}
-                    >
-                      <ClipboardText size={28} />
-                    </button>
-
-                    {dataToExport.map((task) => (
-                      <p key={task.code}>
-                        {task.code}, {task.percentage}%, {task.time}
-                      </p>
-                    ))}
-                  </div>
-                </DialogDescription>
               </DialogHeader>
+
+              <div className='relative flex select-all flex-col rounded-lg p-3 text-xl dark:bg-gray-500 dark:text-gray-200'>
+                <button
+                  type='button'
+                  className='absolute top-2 right-2 select-none rounded-full p-1 transition-all ease-in dark:active:bg-gray-700 dark:hover:bg-gray-600'
+                  onClick={handleCopyToClipboard}
+                >
+                  <ClipboardText size={28} />
+                </button>
+
+                {dataToExport.map((task) => (
+                  <p key={task.code}>
+                    {task.code}, {task.percentage}%, {task.time}
+                  </p>
+                ))}
+              </div>
+
+              <DialogFooter>
+                <DialogClose className='rounded-lg bg-gray-200 px-4 py-2 font-medium text-black text-xl'>
+                  Close
+                </DialogClose>
+              </DialogFooter>
             </DialogContent>
           </Dialog>
 
