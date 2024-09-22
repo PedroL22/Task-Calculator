@@ -19,12 +19,14 @@ export const TaskRow = (props: TaskRowProps) => {
 
       <TaskInput
         placeholder='Percentage %'
-        value={props.percentage}
+        type='number'
+        value={props.percentage === 0 ? '' : props.percentage}
         onChange={(e) => props.onChange(props.id, 'percentage', e.target.value)}
       />
 
       <TaskInput
         placeholder='Time'
+        type='number'
         value={props.time === 0 ? '' : props.time}
         onChange={(e) => props.onChange(props.id, 'time', e.target.value)}
       />

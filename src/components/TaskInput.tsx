@@ -9,7 +9,7 @@ export const TaskInput = (props: TaskInputProps) => {
     <input
       {...props}
       placeholder={props.placeholder}
-      className='w-full rounded-xl border-4 p-5 text-4xl outline-none focus:border-gray-400 dark:text-black dark:placeholder:text-gray-600'
+      className='w-full rounded-xl border-4 p-5 text-4xl outline-none [appearance:textfield] focus:border-gray-400 dark:text-black dark:placeholder:text-gray-600 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
     />
   )
 }
