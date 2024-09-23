@@ -35,10 +35,10 @@ export const TaskRow = (props: TaskRowProps) => {
         type='number'
         value={props.time === 0 ? '' : props.time}
         max='24'
-        maxLength={2}
+        maxLength={3}
         onChange={(e) => {
-          let value = e.target.value.slice(0, 2)
-          value = Math.min(Number.parseInt(value) || 0, 24).toString()
+          let value = e.target.value.slice(0, 3)
+          value = Math.min(Number.parseFloat(value) || 0, 24).toString()
           props.onChange(props.id, 'time', value)
         }}
       />
