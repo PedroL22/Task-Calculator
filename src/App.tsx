@@ -80,13 +80,7 @@ export const App = () => {
 
           <Dialog>
             <DialogTrigger asChild>
-              <ExportButton
-                disabled={
-                  (tasks.length === 1 && tasks[0].code === '') ||
-                  tasks[0].percentage === undefined ||
-                  tasks[0].time === undefined
-                }
-              />
+              <ExportButton disabled={tasks.some((task) => task.code === '' || !task.percentage || !task.time)} />
             </DialogTrigger>
 
             <DialogContent className='border-none bg-gray-700'>
@@ -118,14 +112,7 @@ export const App = () => {
             </DialogContent>
           </Dialog>
 
-          <ResetButton
-            disabled={
-              (tasks.length === 1 && tasks[0].code === '') ||
-              tasks[0].percentage === undefined ||
-              tasks[0].time === undefined
-            }
-            onClick={resetTasks}
-          />
+          <ResetButton onClick={resetTasks} />
         </div>
       </div>
     </main>
