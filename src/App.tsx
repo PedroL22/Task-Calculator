@@ -104,7 +104,7 @@ export const App = () => {
                 </button>
 
                 {dataToExport.map((task) => (
-                  <p key={task.code}>
+                  <p key={task.code} className='font-mono'>
                     {task.code}, {task.percentage}%, {task.time}
                   </p>
                 ))}
