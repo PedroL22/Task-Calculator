@@ -49,8 +49,14 @@ export const App = () => {
 
           <input
             value={hoursToWork}
-            onChange={(e) => setHoursToWork(Number(e.target.value))}
+            max='12'
+            maxLength={2}
             className='flex w-14 items-center rounded-xl px-2.5 py-1 text-4xl outline-none focus:border-gray-700 dark:bg-gray-700'
+            onChange={(e) => {
+              let value = e.target.value.slice(0, 2)
+              value = Math.min(Number.parseInt(value) || 0, 24).toString()
+              setHoursToWork(Number(value))
+            }}
           />
         </h2>
       </div>
