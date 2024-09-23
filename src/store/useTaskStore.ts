@@ -16,7 +16,7 @@ interface TaskStore {
 const createDefaultTask = (): TaskEntity => ({
   id: generateRandomID(),
   code: '',
-  percentage: undefined,
+  percentage: 100,
   time: undefined,
 })
 
