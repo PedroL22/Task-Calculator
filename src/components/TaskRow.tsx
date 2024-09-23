@@ -21,14 +21,26 @@ export const TaskRow = (props: TaskRowProps) => {
         placeholder='Percentage %'
         type='number'
         value={props.percentage === 0 ? '' : props.percentage}
-        onChange={(e) => props.onChange(props.id, 'percentage', e.target.value)}
+        onChange={(e) => {
+          let value = e.target.value.slice(0, 3)
+          value = Math.min(Number.parseInt(value) || 0, 100).toString()
+          props.onChange(props.id, 'percentage', value)
+        }}
+        max='100'
+        maxLength={3}
       />
 
       <TaskInput
         placeholder='Time'
         type='number'
         value={props.time === 0 ? '' : props.time}
-        onChange={(e) => props.onChange(props.id, 'time', e.target.value)}
+        onChange={(e) => {
+          let value = e.target.value.slice(0, 2)
+          value = Math.min(Number.parseInt(value) || 0, 12).toString()
+          props.onChange(props.id, 'time', value)
+        }}
+        max='12'
+        maxLength={2}
       />
 
       <button
