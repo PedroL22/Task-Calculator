@@ -89,12 +89,12 @@ export const App = () => {
               <ExportButton disabled={tasks.some((task) => task.code === '' || !task.percentage || !task.time)} />
             </DialogTrigger>
 
-            <DialogContent className='border-none bg-gray-700'>
+            <DialogContent className='border-none bg-white dark:bg-gray-700'>
               <DialogHeader>
                 <DialogTitle>Export tasks</DialogTitle>
               </DialogHeader>
 
-              <div className='relative flex select-all flex-col rounded-lg p-3 text-xl dark:bg-gray-500 dark:text-gray-200'>
+              <div className='relative flex select-all flex-col rounded-lg bg-gray-200 p-3 text-xl dark:bg-gray-500 dark:text-gray-200'>
                 <button
                   type='button'
                   className='absolute top-2 right-2 select-none rounded-full p-1 transition-all ease-in dark:active:bg-gray-700 dark:hover:bg-gray-600'
