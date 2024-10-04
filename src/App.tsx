@@ -6,15 +6,7 @@ import { AddTaskButton } from '~/components/AddTaskButton'
 import { ExportButton } from '~/components/ExportButton'
 import { ResetButton } from '~/components/ResetButton'
 import { TaskRow } from '~/components/TaskRow'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '~/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog'
 
 import { useConfigStore } from '~/store/useConfigStore'
 import { useTaskStore } from '~/store/useTaskStore'
@@ -123,9 +115,13 @@ export const App = () => {
                 </div>
 
                 <DialogFooter>
-                  <DialogClose className='rounded-lg bg-gray-200 px-4 py-2 font-medium text-black text-xl'>
-                    Close
-                  </DialogClose>
+                  <button
+                    type='button'
+                    className='rounded-lg bg-gray-200 px-4 py-2 font-medium text-black text-xl transition-all ease-in hover:opacity-80 active:opacity-70'
+                    onClick={handleCopyToClipboard}
+                  >
+                    Copy
+                  </button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
