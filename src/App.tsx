@@ -131,7 +131,7 @@ export const App = () => {
             </Dialog>
 
             <ResetButton
-              disabled={!tasks[0].code && tasks[0].percentage === 100 && !tasks[0].time}
+              disabled={tasks.length === 1 && !tasks[0].code && tasks[0].percentage === 100 && !tasks[0].time}
               onClick={resetTasks}
             />
           </motion.div>
