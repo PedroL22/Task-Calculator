@@ -1,7 +1,8 @@
 import { TaskInput } from './TaskInput'
 
-import type { TaskEntity } from '~/entities/TaskEntity'
 import { cn } from '~/lib/utils'
+
+import type { TaskEntity } from '~/entities/TaskEntity'
 
 type TaskRowProps = TaskEntity & {
   canDelete: boolean
@@ -13,13 +14,15 @@ type TaskRowProps = TaskEntity & {
 export const TaskRow = (props: TaskRowProps) => {
   const getColorFromTime = (time: number, hoursToWork: number) => {
     const ratio = Math.min(time / hoursToWork, 1)
-    if (ratio >= 0.875) return 'bg-red-500'
-    if (ratio >= 0.75) return 'bg-red-300'
-    if (ratio >= 0.625) return 'bg-orange-500'
-    if (ratio >= 0.5) return 'bg-orange-300'
-    if (ratio >= 0.375) return 'bg-yellow-500'
-    if (ratio >= 0.25) return 'bg-yellow-300'
-    if (ratio >= 0.125) return 'bg-green-400'
+    if (ratio >= 0.9) return 'bg-red-600'
+    if (ratio >= 0.8) return 'bg-red-500'
+    if (ratio >= 0.7) return 'bg-orange-500'
+    if (ratio >= 0.6) return 'bg-orange-400'
+    if (ratio >= 0.5) return 'bg-yellow-500'
+    if (ratio >= 0.4) return 'bg-yellow-400'
+    if (ratio >= 0.3) return 'bg-lime-500'
+    if (ratio >= 0.2) return 'bg-lime-400'
+    if (ratio >= 0.1) return 'bg-green-500'
     return 'bg-green-500'
   }
 
