@@ -14,7 +14,7 @@ export const useConfigStore = create<ConfigStore>()(
     }),
     {
       name: 'config',
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     }
   )
 )

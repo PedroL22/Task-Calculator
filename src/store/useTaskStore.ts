@@ -54,7 +54,7 @@ export const useTaskStore = create<TaskStore>()(
     }),
     {
       name: 'tasks',
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     }
   )
 )
