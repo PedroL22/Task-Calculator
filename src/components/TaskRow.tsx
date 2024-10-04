@@ -1,16 +1,34 @@
 import { TaskInput } from './TaskInput'
 
 import type { TaskEntity } from '~/entities/TaskEntity'
+import { cn } from '~/lib/utils'
 
 type TaskRowProps = TaskEntity & {
   canDelete: boolean
+  hoursToWork: number
   onChange: (id: string, key: keyof TaskEntity, value: string | number | undefined) => void
   onClose: () => void
 }
 
 export const TaskRow = (props: TaskRowProps) => {
+  const getColorFromTime = (time: number, hoursToWork: number) => {
+    const ratio = Math.min(time / hoursToWork, 1)
+    if (ratio >= 0.875) return 'bg-red-500'
+    if (ratio >= 0.75) return 'bg-red-300'
+    if (ratio >= 0.625) return 'bg-orange-500'
+    if (ratio >= 0.5) return 'bg-orange-300'
+    if (ratio >= 0.375) return 'bg-yellow-500'
+    if (ratio >= 0.25) return 'bg-yellow-300'
+    if (ratio >= 0.125) return 'bg-green-400'
+    return 'bg-green-500'
+  }
+
+  const taskColor = getColorFromTime(Number(props.time), props.hoursToWork)
+
   return (
     <div className='flex w-full items-center justify-between space-x-4'>
+      <div aria-hidden className={cn('size-[5.5rem] shrink-0 rounded-lg', taskColor)} />
+
       <TaskInput
         placeholder='Task ID'
         value={props.code}
