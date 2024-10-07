@@ -16,12 +16,12 @@ export const TaskRow = (props: TaskRowProps) => {
     const ratio = Math.min(time / hoursToWork, 1)
     if (ratio >= 0.9) return 'bg-red-600'
     if (ratio >= 0.8) return 'bg-red-500'
-    if (ratio >= 0.7) return 'bg-orange-500'
-    if (ratio >= 0.6) return 'bg-orange-400'
-    if (ratio >= 0.5) return 'bg-yellow-500'
-    if (ratio >= 0.4) return 'bg-yellow-400'
-    if (ratio >= 0.3) return 'bg-lime-500'
-    if (ratio >= 0.2) return 'bg-lime-400'
+    if (ratio >= 0.7) return 'bg-orange-400'
+    if (ratio >= 0.6) return 'bg-orange-500'
+    if (ratio >= 0.5) return 'bg-yellow-400'
+    if (ratio >= 0.4) return 'bg-yellow-500'
+    if (ratio >= 0.3) return 'bg-lime-400'
+    if (ratio >= 0.2) return 'bg-lime-500'
     if (ratio >= 0.1) return 'bg-green-500'
     return 'bg-green-500'
   }
