@@ -13,6 +13,7 @@ import { TaskInput } from './TaskInput'
 
 import { cn } from '~/lib/utils'
 
+import { toast } from 'sonner'
 import type { TaskEntity } from '~/entities/TaskEntity'
 
 type TaskRowProps = TaskEntity & {
@@ -47,6 +48,12 @@ export const TaskRow = (props: TaskRowProps) => {
 
     setDescriptionText('')
     setDescriptionDialog(false)
+
+    if (props.code.length) {
+      toast.success(`Description saved ${props.code}!`)
+    } else {
+      toast.success('Description saved!')
+    }
   }
 
   const descriptionToShow = props.description?.length
@@ -87,7 +94,7 @@ export const TaskRow = (props: TaskRowProps) => {
             <DialogDescription className='flex flex-col'>
               <input
                 id='description-input'
-                className='mt-1 w-full resize-none rounded-md px-2.5 py-1.5 text-base text-white shadow-sm focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-500 dark:text-gray-200'
+                className='mt-1 w-full resize-none rounded-md bg-gray-200 px-2.5 py-1.5 text-base text-black shadow-sm focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-500 dark:text-gray-200'
                 value={descriptionText}
                 onChange={(e) => setDescriptionText(e.target.value)}
                 onKeyDown={(e) => {

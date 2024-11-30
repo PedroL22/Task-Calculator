@@ -7,6 +7,7 @@ import { ExportButton } from '~/components/ExportButton'
 import { ResetButton } from '~/components/ResetButton'
 import { TaskRow } from '~/components/TaskRow'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog'
+import { SettingsDialog } from './components/SettingsDialog'
 
 import { useConfigStore } from '~/store/useConfigStore'
 import { useTaskStore } from '~/store/useTaskStore'
@@ -131,6 +132,8 @@ export const App = () => {
               disabled={tasks.length === 1 && !tasks[0].code && tasks[0].percentage === 100 && !tasks[0].time}
               onClick={resetTasks}
             />
+
+            <SettingsDialog />
           </motion.div>
         </motion.div>
       </LayoutGroup>

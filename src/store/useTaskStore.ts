@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
 import { generateRandomID } from '~/utils/generateRandomID'
+import { useConfigStore } from './useConfigStore'
 
 import type { TaskEntity } from '~/entities/TaskEntity'
 
@@ -13,13 +14,17 @@ interface TaskStore {
   resetTasks: () => void
 }
 
-const createDefaultTask = (): TaskEntity => ({
-  id: generateRandomID(),
-  description: undefined,
-  code: '',
-  percentage: 100,
-  time: undefined,
-})
+const createDefaultTask = (): TaskEntity => {
+  const defaultPercentage = useConfigStore.getState().defaultPercentage
+
+  return {
+    id: generateRandomID(),
+    description: undefined,
+    code: '',
+    percentage: defaultPercentage,
+    time: undefined,
+  }
+}
 
 export const useTaskStore = create<TaskStore>()(
   persist(
@@ -27,9 +32,22 @@ export const useTaskStore = create<TaskStore>()(
       tasks: [createDefaultTask()],
 
       addTask: () =>
-        set((state) => ({
-          tasks: [...state.tasks, createDefaultTask()],
-        })),
+        set((state) => {
+          const defaultPercentage = useConfigStore.getState().defaultPercentage
+
+          return {
+            tasks: [
+              ...state.tasks,
+              {
+                id: generateRandomID(),
+                description: undefined,
+                code: '',
+                percentage: defaultPercentage,
+                time: undefined,
+              },
+            ],
+          }
+        }),
 
       removeTask: (id: string) =>
         set((state) => ({
@@ -49,9 +67,21 @@ export const useTaskStore = create<TaskStore>()(
         })),
 
       resetTasks: () =>
-        set(() => ({
-          tasks: [createDefaultTask()],
-        })),
+        set(() => {
+          const defaultPercentage = useConfigStore.getState().defaultPercentage
+
+          return {
+            tasks: [
+              {
+                id: generateRandomID(),
+                description: undefined,
+                code: '',
+                percentage: defaultPercentage,
+                time: undefined,
+              },
+            ],
+          }
+        }),
     }),
     {
       name: 'tasks',
