@@ -6,7 +6,15 @@ import { AddTaskButton } from '~/components/AddTaskButton'
 import { ExportButton } from '~/components/ExportButton'
 import { ResetButton } from '~/components/ResetButton'
 import { TaskRow } from '~/components/TaskRow'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '~/components/ui/dialog'
 import { SettingsDialog } from './components/SettingsDialog'
 import { Toggle } from './components/Toggle'
 
@@ -101,6 +109,10 @@ export const App = () => {
               <DialogContent className='border-none bg-white dark:bg-gray-700'>
                 <DialogHeader>
                   <DialogTitle>Export tasks</DialogTitle>
+
+                  <DialogDescription className='dark:text-gray-400'>
+                    Your tasks are automatically saved and will be available in future sessions.
+                  </DialogDescription>
                 </DialogHeader>
 
                 <div className='relative flex flex-col rounded-lg bg-gray-200 p-3 text-xl dark:bg-gray-500 dark:text-gray-200'>

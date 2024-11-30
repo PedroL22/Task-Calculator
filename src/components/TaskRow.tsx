@@ -91,28 +91,32 @@ export const TaskRow = (props: TaskRowProps) => {
               </label>
             </DialogTitle>
 
-            <DialogDescription className='flex flex-col'>
-              <input
-                id='description-input'
-                className='mt-1 w-full resize-none rounded-md bg-gray-200 px-2.5 py-1.5 text-base text-black shadow-sm focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-500 dark:text-gray-200'
-                value={descriptionText}
-                onChange={(e) => setDescriptionText(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleSaveDescription()
-                  }
-                }}
-              />
-
-              <button
-                type='button'
-                className='mt-3 self-end rounded-lg bg-gray-200 px-4 py-2 font-medium text-black text-lg transition-all ease-in hover:opacity-80 active:opacity-70'
-                onClick={handleSaveDescription}
-              >
-                Save
-              </button>
+            <DialogDescription className='dark:text-gray-400'>
+              A brief summary of the task and its objectives.
             </DialogDescription>
           </DialogHeader>
+
+          <div className='flex flex-col'>
+            <input
+              id='description-input'
+              className='w-full resize-none rounded-md bg-gray-200 px-2.5 py-1.5 text-base text-black shadow-sm focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-500 dark:text-gray-200'
+              value={descriptionText}
+              onChange={(e) => setDescriptionText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSaveDescription()
+                }
+              }}
+            />
+
+            <button
+              type='button'
+              className='mt-3 self-end rounded-lg bg-gray-200 px-4 py-2 font-medium text-black text-lg transition-all ease-in hover:opacity-80 active:opacity-70'
+              onClick={handleSaveDescription}
+            >
+              Save
+            </button>
+          </div>
         </DialogContent>
       </Dialog>
 

@@ -1,5 +1,14 @@
 import { Toggle } from './Toggle'
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog'
 
 import { useConfigStore } from '~/store/useConfigStore'
 
@@ -17,14 +26,16 @@ export const SettingsDialog = () => {
     <Dialog>
       <DialogTrigger className='select-none text-5xl'>⚙️</DialogTrigger>
 
-      <DialogContent className='border-0 pb-5 dark:bg-gray-700'>
+      <DialogContent aria-describedby='task calculator settings' className='border-0 pb-5 dark:bg-gray-700'>
         <DialogHeader>
           <DialogTitle>Task Calculator Settings</DialogTitle>
+
+          <DialogDescription className='dark:text-gray-400'>All changes are saved automatically.</DialogDescription>
         </DialogHeader>
 
         <div className='space-y-3 divide-y divide-gray-300 dark:divide-gray-500'>
           <div className='flex items-center justify-between pt-3'>
-            <label htmlFor='hours-to-work' className='cursor-pointer select-none'>
+            <label htmlFor='hours-to-work' className='w-full cursor-pointer select-none'>
               Hours to work
             </label>
 
@@ -43,7 +54,7 @@ export const SettingsDialog = () => {
           </div>
 
           <div className='flex items-center justify-between pt-3'>
-            <label htmlFor='default-percentage' className='cursor-pointer select-none'>
+            <label htmlFor='default-percentage' className='w-full cursor-pointer select-none'>
               Default percentage
             </label>
 
@@ -62,7 +73,7 @@ export const SettingsDialog = () => {
           </div>
 
           <div className='flex items-center justify-between pt-3'>
-            <label htmlFor='export-with-date' className='cursor-pointer select-none'>
+            <label htmlFor='export-with-date' className='w-full cursor-pointer select-none'>
               Export with current date
             </label>
 
