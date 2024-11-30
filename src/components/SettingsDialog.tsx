@@ -1,5 +1,5 @@
 import { Toggle } from './Toggle'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
 
 import { useConfigStore } from '~/store/useConfigStore'
 
@@ -69,6 +69,17 @@ export const SettingsDialog = () => {
             <Toggle value={exportWithCurrentDate} onToggle={setExportWithCurrentDate} />
           </div>
         </div>
+
+        <DialogFooter>
+          <DialogClose asChild>
+            <button
+              type='button'
+              className='mt-5 self-end rounded-lg bg-gray-200 px-4 py-2 font-medium text-black text-xl transition-all ease-in hover:opacity-80 active:opacity-70'
+            >
+              Close
+            </button>
+          </DialogClose>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )
