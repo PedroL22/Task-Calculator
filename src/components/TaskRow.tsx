@@ -99,7 +99,8 @@ export const TaskRow = (props: TaskRowProps) => {
           <div className='flex flex-col'>
             <input
               id='description-input'
-              className='w-full resize-none rounded-md bg-gray-200 px-2.5 py-1.5 text-base text-black shadow-sm focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-500 dark:text-gray-200'
+              placeholder='Task description'
+              className='w-full resize-none rounded-md bg-gray-200 px-2.5 py-1.5 text-base text-black shadow-sm placeholder:text-gray-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-500 dark:text-gray-200'
               value={descriptionText}
               onChange={(e) => setDescriptionText(e.target.value)}
               onKeyDown={(e) => {
