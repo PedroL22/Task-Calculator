@@ -32,7 +32,7 @@ export const App = () => {
   }, [tasks, hoursToWork])
 
   return (
-    <main className='mx-auto max-w-screen-lg p-6'>
+    <main className='mx-auto min-h-screen max-w-screen-lg p-6'>
       <LayoutGroup>
         <div className='space-y-4'>
           <h1 className='font-medium text-5xl'>⏳Remaining time: {remainingTime}</h1>
@@ -69,6 +69,7 @@ export const App = () => {
                   >
                     <TaskRow
                       id={task.id}
+                      description={task.description}
                       code={task.code}
                       percentage={task.percentage}
                       time={task.time}

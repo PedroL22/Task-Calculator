@@ -1,3 +1,14 @@
+import { useEffect, useState } from 'react'
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '~/components/ui/dialog'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '~/components/ui/tooltip'
 import { TaskInput } from './TaskInput'
 
 import { cn } from '~/lib/utils'
@@ -12,6 +23,9 @@ type TaskRowProps = TaskEntity & {
 }
 
 export const TaskRow = (props: TaskRowProps) => {
+  const [descriptionDialog, setDescriptionDialog] = useState(false)
+  const [descriptionText, setDescriptionText] = useState(props.description || '')
+
   const getColorFromTime = (time: number, hoursToWork: number) => {
     const ratio = Math.min(time / hoursToWork, 1)
     if (ratio >= 0.9) return 'bg-red-600'
@@ -28,9 +42,72 @@ export const TaskRow = (props: TaskRowProps) => {
 
   const taskColor = getColorFromTime(Number(props.time), props.hoursToWork)
 
+  const handleSaveDescription = () => {
+    props.onChange(props.id, 'description', descriptionText)
+
+    setDescriptionText('')
+    setDescriptionDialog(false)
+  }
+
+  const descriptionToShow = props.description?.length
+    ? props.description
+    : descriptionText.length
+      ? descriptionText
+      : '-'
+
+  useEffect(() => {
+    setDescriptionText(props.description || '')
+  }, [props.description])
+
   return (
     <div className='flex w-full items-center justify-between space-x-4'>
-      <div aria-hidden className={cn('size-[5.5rem] shrink-0 rounded-lg', taskColor)} />
+      <Dialog open={descriptionDialog} onOpenChange={setDescriptionDialog}>
+        <DialogTrigger>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div aria-hidden className={cn('size-[5.5rem] shrink-0 cursor-pointer rounded-lg', taskColor)} />
+              </TooltipTrigger>
+
+              <TooltipContent side='bottom'>
+                <p>{descriptionToShow}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </DialogTrigger>
+
+        <DialogContent className='border-0 pb-5 dark:bg-gray-700'>
+          <DialogHeader>
+            <DialogTitle>
+              <label htmlFor='description-input' className='cursor-pointer select-none'>
+                Add a description to your task
+              </label>
+            </DialogTitle>
+
+            <DialogDescription className='flex flex-col'>
+              <input
+                id='description-input'
+                className='mt-1 w-full resize-none rounded-md px-2.5 py-1.5 text-base text-white shadow-sm focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-500 dark:text-gray-200'
+                value={descriptionText}
+                onChange={(e) => setDescriptionText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSaveDescription()
+                  }
+                }}
+              />
+
+              <button
+                type='button'
+                className='mt-3 self-end rounded-lg bg-gray-200 px-4 py-2 font-medium text-black text-lg transition-all ease-in hover:opacity-80 active:opacity-70'
+                onClick={handleSaveDescription}
+              >
+                Save
+              </button>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
 
       <TaskInput
         placeholder='Task ID'
