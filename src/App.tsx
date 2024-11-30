@@ -20,9 +20,11 @@ export const App = () => {
   const dataToExport = tasks.map(({ code, percentage, time }) => ({ code, percentage, time }))
 
   const handleCopyToClipboard = () => {
-    navigator.clipboard.writeText(
-      dataToExport.map((task) => `${task.code}, ${task.percentage}%, ${task.time}`).join('\n')
-    )
+    const textToCopy = exportWithCurrentDate
+      ? `Report for ${new Date().toLocaleDateString()}\n\n${dataToExport.map((task) => `${task.code}, ${task.percentage}%, ${task.time}`).join('\n')}`
+      : dataToExport.map((task) => `${task.code}, ${task.percentage}%, ${task.time}`).join('\n')
+
+    navigator.clipboard.writeText(textToCopy)
 
     toast.success('Tasks copied to clipboard!')
   }
@@ -110,7 +112,7 @@ export const App = () => {
                   </button>
 
                   <div className='select-all font-mono'>
-                    {exportWithCurrentDate && <div className='mb-4'>Report for {new Date().toLocaleDateString()}</div>}
+                    {exportWithCurrentDate && <div className='mb-3'>Report for {new Date().toLocaleDateString()}</div>}
 
                     {dataToExport.map((task) => (
                       <div key={task.code}>
