@@ -13,7 +13,7 @@ import { useConfigStore } from '~/store/useConfigStore'
 import { useTaskStore } from '~/store/useTaskStore'
 
 export const App = () => {
-  const { hoursToWork, setHoursToWork } = useConfigStore()
+  const { hoursToWork, setHoursToWork, exportWithCurrentDate } = useConfigStore()
   const { tasks, addTask, removeTask, updateTask, resetTasks } = useTaskStore()
   const [remainingTime, setRemainingTime] = useState(8)
 
@@ -100,7 +100,7 @@ export const App = () => {
                   <DialogTitle>Export tasks</DialogTitle>
                 </DialogHeader>
 
-                <div className='relative flex select-all flex-col rounded-lg bg-gray-200 p-3 text-xl dark:bg-gray-500 dark:text-gray-200'>
+                <div className='relative flex flex-col rounded-lg bg-gray-200 p-3 text-xl dark:bg-gray-500 dark:text-gray-200'>
                   <button
                     type='button'
                     className='absolute top-2 right-2 select-none rounded-full p-1 transition-all ease-in dark:active:bg-gray-700 dark:hover:bg-gray-600'
@@ -109,11 +109,15 @@ export const App = () => {
                     <ClipboardText size={28} />
                   </button>
 
-                  {dataToExport.map((task) => (
-                    <p key={task.code} className='font-mono'>
-                      {task.code}, {task.percentage}%, {task.time}
-                    </p>
-                  ))}
+                  <div className='select-all font-mono'>
+                    {exportWithCurrentDate && <div className='mb-4'>Report for {new Date().toLocaleDateString()}</div>}
+
+                    {dataToExport.map((task) => (
+                      <div key={task.code}>
+                        {task.code}, {task.percentage}%, {task.time}
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 <DialogFooter>
