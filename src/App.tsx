@@ -8,12 +8,13 @@ import { ResetButton } from '~/components/ResetButton'
 import { TaskRow } from '~/components/TaskRow'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog'
 import { SettingsDialog } from './components/SettingsDialog'
+import { Toggle } from './components/Toggle'
 
 import { useConfigStore } from '~/store/useConfigStore'
 import { useTaskStore } from '~/store/useTaskStore'
 
 export const App = () => {
-  const { hoursToWork, setHoursToWork, exportWithCurrentDate } = useConfigStore()
+  const { hoursToWork, setHoursToWork, exportWithCurrentDate, setExportWithCurrentDate } = useConfigStore()
   const { tasks, addTask, removeTask, updateTask, resetTasks } = useTaskStore()
   const [remainingTime, setRemainingTime] = useState(8)
 
@@ -123,13 +124,23 @@ export const App = () => {
                 </div>
 
                 <DialogFooter>
-                  <button
-                    type='button'
-                    className='rounded-lg bg-gray-200 px-4 py-2 font-medium text-black text-xl transition-all ease-in hover:opacity-80 active:opacity-70'
-                    onClick={handleCopyToClipboard}
-                  >
-                    Copy
-                  </button>
+                  <div className='flex w-full items-center justify-between'>
+                    <div className='flex items-center space-x-2'>
+                      <label htmlFor='export-with-date' className='cursor-pointer select-none'>
+                        Export with current date
+                      </label>
+
+                      <Toggle id='export-with-date' value={exportWithCurrentDate} onToggle={setExportWithCurrentDate} />
+                    </div>
+
+                    <button
+                      type='button'
+                      className='rounded-lg bg-gray-200 px-4 py-2 font-medium text-black text-xl transition-all ease-in hover:opacity-80 active:opacity-70'
+                      onClick={handleCopyToClipboard}
+                    >
+                      Copy
+                    </button>
+                  </div>
                 </DialogFooter>
               </DialogContent>
             </Dialog>

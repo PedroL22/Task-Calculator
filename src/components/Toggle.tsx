@@ -2,11 +2,12 @@ import { useState } from 'react'
 import { cn } from '~/lib/utils'
 
 type ToggleProps = {
+  id?: string
   value?: boolean
   onToggle?: (isOn: boolean) => void
 }
 
-export const Toggle = ({ value, onToggle }: ToggleProps) => {
+export const Toggle = ({ id, value, onToggle }: ToggleProps) => {
   const [isOn, setIsOn] = useState(value || false)
 
   const handleToggle = () => {
@@ -20,7 +21,7 @@ export const Toggle = ({ value, onToggle }: ToggleProps) => {
   return (
     <label className='flex cursor-pointer items-center'>
       <div className='relative'>
-        <input type='checkbox' className='sr-only' checked={isOn} onChange={handleToggle} />
+        <input id={id} type='checkbox' className='sr-only' checked={isOn} onChange={handleToggle} />
 
         <div
           className={cn(

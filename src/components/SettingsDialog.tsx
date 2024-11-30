@@ -62,11 +62,11 @@ export const SettingsDialog = () => {
           </div>
 
           <div className='flex items-center justify-between pt-3'>
-            <label htmlFor='default-percentage' className='cursor-pointer select-none'>
+            <label htmlFor='export-with-date' className='cursor-pointer select-none'>
               Export with current date
             </label>
 
-            <Toggle value={exportWithCurrentDate} onToggle={setExportWithCurrentDate} />
+            <Toggle id='export-with-date' value={exportWithCurrentDate} onToggle={setExportWithCurrentDate} />
           </div>
         </div>
 
