@@ -9,7 +9,8 @@
     "indentStyle": "space",
     "indentWidth": 2,
     "lineEnding": "lf",
-    "lineWidth": 120
+    "lineWidth": 120,
+    "formatWithErrors": true
   },
   "organizeImports": {
     "enabled": true

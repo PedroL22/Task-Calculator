@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 
+import { toast } from 'sonner'
 import {
   Dialog,
   DialogContent,
@@ -13,7 +14,6 @@ import { TaskInput } from './TaskInput'
 
 import { cn } from '~/lib/utils'
 
-import { toast } from 'sonner'
 import type { TaskEntity } from '~/entities/TaskEntity'
 
 type TaskRowProps = TaskEntity & {
@@ -50,7 +50,7 @@ export const TaskRow = (props: TaskRowProps) => {
     setDescriptionDialog(false)
 
     if (props.code.length) {
-      toast.success(`Description saved ${props.code}!`)
+      toast.success(`Description saved for ${props.code}!`)
     } else {
       toast.success('Description saved!')
     }
@@ -73,7 +73,7 @@ export const TaskRow = (props: TaskRowProps) => {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div aria-hidden className={cn('size-[5.5rem] shrink-0 cursor-pointer rounded-lg', taskColor)} />
+                <div aria-hidden className={cn('size-22 shrink-0 cursor-pointer rounded-lg', taskColor)} />
               </TooltipTrigger>
 
               <TooltipContent side='bottom'>
@@ -155,8 +155,9 @@ export const TaskRow = (props: TaskRowProps) => {
 
       <button
         type='button'
+        title='Delete task'
         disabled={!props.canDelete}
-        className='text-4xl disabled:cursor-not-allowed disabled:opacity-50'
+        className='cursor-pointer text-4xl disabled:cursor-not-allowed disabled:opacity-50'
         onClick={props.onClose}
       >
         ❌

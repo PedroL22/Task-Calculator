@@ -5,7 +5,7 @@ export const AddTaskButton = (props: ComponentProps<'button'>) => {
     <button
       {...props}
       type='button'
-      className='w-fit select-none rounded-2xl bg-emerald-700 p-6 font-bold text-2xl text-gray-50 transition-all ease-in hover:opacity-80'
+      className='w-fit cursor-pointer select-none rounded-2xl bg-emerald-700 p-6 font-bold text-2xl text-gray-50 transition-all ease-in hover:opacity-80'
     >
       Add new task
     </button>

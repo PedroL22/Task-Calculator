@@ -24,7 +24,9 @@ export const SettingsDialog = () => {
 
   return (
     <Dialog>
-      <DialogTrigger className='select-none text-5xl'>⚙️</DialogTrigger>
+      <DialogTrigger title='Settings' className='cursor-pointer select-none text-5xl'>
+        ⚙️
+      </DialogTrigger>
 
       <DialogContent aria-describedby='task calculator settings' className='border-0 pb-5 dark:bg-gray-700'>
         <DialogHeader>
