@@ -60,7 +60,7 @@ export const SettingsDialog = ({ variant = 'default' }: SettingsDialogProps) => 
               className='flex w-20 items-center rounded-xl bg-gray-200 px-2.5 py-1 text-4xl outline-none focus:border-gray-600 dark:bg-gray-600'
               onChange={(e) => {
                 let value = e.target.value.slice(0, 2)
-                value = Math.min(Number.parseInt(value) || 0, 24).toString()
+                value = Math.min(Number.parseInt(value) || 0, 12).toString()
                 setHoursToWork(Number(value))
               }}
             />

@@ -144,11 +144,11 @@ export const TaskRow = (props: TaskRowProps) => {
         placeholder='Time'
         type='number'
         value={props.time === 0 ? '' : props.time}
-        max='24'
+        max='12'
         maxLength={4}
         onChange={(e) => {
           let value = e.target.value.slice(0, 4)
-          value = Math.min(Number.parseFloat(value) || 0, 24).toString()
+          value = Math.min(Number.parseFloat(value) || 0, 12).toString()
           props.onChange(props.id, 'time', value)
         }}
       />
