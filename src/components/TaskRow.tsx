@@ -19,7 +19,6 @@ import type { TaskEntity } from '~/entities/TaskEntity'
 type TaskRowProps = TaskEntity & {
   canDelete: boolean
   hoursToWork: number
-  isDragging: boolean
   onChange: (id: string, key: keyof TaskEntity, value: string | number | undefined) => void
   onClose: () => void
 }
@@ -74,14 +73,7 @@ export const TaskRow = (props: TaskRowProps) => {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div
-                  aria-hidden
-                  data-is-dragging={props.isDragging}
-                  className={cn(
-                    'size-22 shrink-0 cursor-pointer rounded-lg transition-all ease-in data-[is-dragging=true]:shadow-xl',
-                    taskColor
-                  )}
-                />
+                <div aria-hidden className={cn('size-22 shrink-0 cursor-pointer rounded-lg', taskColor)} />
               </TooltipTrigger>
 
               <TooltipContent side='bottom'>
@@ -130,14 +122,12 @@ export const TaskRow = (props: TaskRowProps) => {
       </Dialog>
 
       <TaskInput
-        isDragging={props.isDragging}
         placeholder='Task ID'
         value={props.code}
         onChange={(e) => props.onChange(props.id, 'code', e.target.value)}
       />
 
       <TaskInput
-        isDragging={props.isDragging}
         placeholder='Percentage %'
         type='number'
         value={props.percentage === 0 ? '' : props.percentage}
@@ -151,7 +141,6 @@ export const TaskRow = (props: TaskRowProps) => {
       />
 
       <TaskInput
-        isDragging={props.isDragging}
         placeholder='Time'
         type='number'
         value={props.time === 0 ? '' : props.time}

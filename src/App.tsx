@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
-import { ClipboardTextIcon, DotsSixVerticalIcon } from '@phosphor-icons/react'
-import { LayoutGroup, Reorder, motion, useDragControls } from 'motion/react'
+import { CaretDownIcon, CaretUpIcon, ClipboardTextIcon } from '@phosphor-icons/react'
+import { LayoutGroup, motion } from 'motion/react'
 import { toast } from 'sonner'
 import { AddTaskButton } from '~/components/AddTaskButton'
 import { ExportButton } from '~/components/ExportButton'
@@ -25,9 +25,6 @@ export const App = () => {
   const { hoursToWork, setHoursToWork, exportWithCurrentDate, exportWithTotalHours } = useConfigStore()
   const { tasks, addTask, removeTask, updateTask, resetTasks, reorderTasks } = useTaskStore()
   const [remainingTime, setRemainingTime] = useState(hoursToWork)
-  const [isDragging, setIsDragging] = useState(false)
-
-  const dragControls = useDragControls()
 
   const dataLines = tasks.map(({ code, percentage, time }) => `${code}, ${percentage}%, ${time}`)
   const totalHours = tasks.reduce((sum, t) => sum + (t.time || 0), 0)
@@ -62,6 +59,17 @@ export const App = () => {
     setRemainingTime(hoursToWork - totalHours)
   }, [hoursToWork, totalHours])
 
+  const moveTask = (index: number, direction: -1 | 1) => {
+    const target = index + direction
+
+    if (target < 0 || target >= tasks.length) return
+
+    const newTasks = [...tasks]
+    const [moved] = newTasks.splice(index, 1)
+    newTasks.splice(target, 0, moved)
+    reorderTasks(newTasks)
+  }
+
   return (
     <main className='mx-auto min-h-screen max-w-(--breakpoint-lg) p-6'>
       <LayoutGroup>
@@ -76,47 +84,51 @@ export const App = () => {
               max='12'
               maxLength={2}
               className='flex w-14 items-center rounded-xl px-2.5 py-1 text-4xl outline-none focus:border-gray-700 dark:bg-gray-700'
-              onChange={(e) => setHoursToWork(Math.min(Math.max(+e.target.value || 0, 0), 24))}
+              onChange={(e) => setHoursToWork(Math.min(Math.max(+e.target.value || 0, 0), 12))}
             />
           </h2>
         </div>
 
         <motion.div className='mt-10 flex flex-col' layout>
-          <Reorder.Group axis='y' values={tasks} onReorder={reorderTasks} className='mb-6 flex flex-col space-y-4'>
-            {tasks.map((task) => (
-              <Reorder.Item
-                key={task.id}
-                value={task}
-                dragListener={true}
-                dragControls={dragControls}
-                onDragStart={() => setIsDragging(true)}
-                onDragEnd={() => setIsDragging(false)}
-                layout
-              >
-                <div className='relative'>
+          <div className='mb-6 flex flex-col space-y-4'>
+            {tasks.map((task, index) => (
+              <motion.div key={task.id} layout className='relative flex items-center space-x-2'>
+                <div className='-left-12 absolute flex flex-col'>
                   <button
                     type='button'
-                    className='-translate-y-1/2 -left-12 absolute top-1/2 cursor-grab p-2 active:cursor-grabbing'
+                    title='Move up'
+                    className='cursor-pointer transition-all ease-in hover:opacity-80 disabled:cursor-not-allowed'
+                    disabled={index === 0}
+                    onClick={() => moveTask(index, -1)}
                   >
-                    <DotsSixVerticalIcon size={32} weight='bold' />
+                    <CaretUpIcon size={28} weight='bold' />
                   </button>
 
-                  <TaskRow
-                    id={task.id}
-                    description={task.description}
-                    code={task.code}
-                    percentage={task.percentage}
-                    time={task.time}
-                    canDelete={tasks.length > 1}
-                    hoursToWork={hoursToWork}
-                    isDragging={isDragging}
-                    onChange={updateTask}
-                    onClose={() => removeTask(task.id)}
-                  />
+                  <button
+                    type='button'
+                    title='Move down'
+                    className='cursor-pointer transition-all ease-in hover:opacity-80 disabled:cursor-not-allowed'
+                    disabled={index === tasks.length - 1}
+                    onClick={() => moveTask(index, 1)}
+                  >
+                    <CaretDownIcon size={28} weight='bold' />
+                  </button>
                 </div>
-              </Reorder.Item>
+
+                <TaskRow
+                  id={task.id}
+                  description={task.description}
+                  code={task.code}
+                  percentage={task.percentage}
+                  time={task.time}
+                  canDelete={tasks.length > 1}
+                  hoursToWork={hoursToWork}
+                  onChange={updateTask}
+                  onClose={() => removeTask(task.id)}
+                />
+              </motion.div>
             ))}
-          </Reorder.Group>
+          </div>
 
           <motion.div className='flex items-center space-x-4' layout>
             <AddTaskButton onClick={addTask} />
