@@ -1,6 +1,7 @@
-import { ClipboardText } from '@phosphor-icons/react/dist/ssr'
-import { AnimatePresence, LayoutGroup, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+
+import { ClipboardTextIcon } from '@phosphor-icons/react/dist/ssr'
+import { AnimatePresence, LayoutGroup, motion } from 'motion/react'
 import { toast } from 'sonner'
 import { AddTaskButton } from '~/components/AddTaskButton'
 import { ExportButton } from '~/components/ExportButton'
@@ -16,24 +17,40 @@ import {
   DialogTrigger,
 } from '~/components/ui/dialog'
 import { SettingsDialog } from './components/SettingsDialog'
-import { Toggle } from './components/Toggle'
 
 import { useConfigStore } from '~/store/useConfigStore'
 import { useTaskStore } from '~/store/useTaskStore'
 
 export const App = () => {
-  const { hoursToWork, setHoursToWork, exportWithCurrentDate, setExportWithCurrentDate } = useConfigStore()
+  const { hoursToWork, setHoursToWork, exportWithCurrentDate, exportWithTotalHours } = useConfigStore()
   const { tasks, addTask, removeTask, updateTask, resetTasks } = useTaskStore()
   const [remainingTime, setRemainingTime] = useState(8)
 
-  const dataToExport = tasks.map(({ code, percentage, time }) => ({ code, percentage, time }))
+  const dataLines = tasks.map(({ code, percentage, time }) => `${code}, ${percentage}%, ${time}`)
+  const totalHours = tasks.reduce((sum, t) => sum + (t.time || 0), 0)
+
+  const buildExportText = () => {
+    const lines: string[] = []
+
+    if (exportWithCurrentDate) {
+      lines.push(`Report for ${new Date().toLocaleDateString()}`)
+      lines.push('')
+    }
+
+    lines.push(...dataLines)
+
+    if (exportWithTotalHours) {
+      lines.push('')
+      lines.push(`Total hours: ${totalHours}`)
+    }
+
+    return lines.join('\n')
+  }
 
   const handleCopyToClipboard = () => {
-    const textToCopy = exportWithCurrentDate
-      ? `Report for ${new Date().toLocaleDateString()}\n\n${dataToExport.map((task) => `${task.code}, ${task.percentage}%, ${task.time}`).join('\n')}`
-      : dataToExport.map((task) => `${task.code}, ${task.percentage}%, ${task.time}`).join('\n')
+    const text = buildExportText()
 
-    navigator.clipboard.writeText(textToCopy)
+    navigator.clipboard.writeText(text)
 
     toast.success('Tasks copied to clipboard!')
   }
@@ -118,36 +135,23 @@ export const App = () => {
                 <div className='relative flex flex-col rounded-lg bg-gray-200 p-3 text-xl dark:bg-gray-500 dark:text-gray-200'>
                   <button
                     type='button'
-                    className='absolute top-2 right-2 select-none rounded-full p-1 transition-all ease-in dark:active:bg-gray-700 dark:hover:bg-gray-600'
+                    title='Copy to clipboard'
+                    className='absolute top-2 right-2 cursor-pointer select-none rounded-full p-1 transition-all ease-in dark:active:bg-gray-700 dark:hover:bg-gray-600'
                     onClick={handleCopyToClipboard}
                   >
-                    <ClipboardText size={28} />
+                    <ClipboardTextIcon size={28} />
                   </button>
 
-                  <div className='select-all font-mono'>
-                    {exportWithCurrentDate && <div className='mb-3'>Report for {new Date().toLocaleDateString()}</div>}
-
-                    {dataToExport.map((task) => (
-                      <div key={task.code}>
-                        {task.code}, {task.percentage}%, {task.time}
-                      </div>
-                    ))}
-                  </div>
+                  <pre className='whitespace-pre-wrap font-mono'>{buildExportText()}</pre>
                 </div>
 
                 <DialogFooter>
                   <div className='flex w-full items-center justify-between'>
-                    <div className='flex items-center space-x-2'>
-                      <label htmlFor='export-with-date' className='cursor-pointer select-none'>
-                        Export with current date
-                      </label>
-
-                      <Toggle id='export-with-date' value={exportWithCurrentDate} onToggle={setExportWithCurrentDate} />
-                    </div>
+                    <SettingsDialog variant='small' />
 
                     <button
                       type='button'
-                      className='rounded-lg bg-gray-200 px-4 py-2 font-medium text-black text-xl transition-all ease-in hover:opacity-80 active:opacity-70'
+                      className='cursor-pointer rounded-lg bg-gray-200 px-4 py-2 font-medium text-black text-xl transition-all ease-in hover:opacity-80 active:opacity-70'
                       onClick={handleCopyToClipboard}
                     >
                       Copy
@@ -162,7 +166,7 @@ export const App = () => {
               onClick={resetTasks}
             />
 
-            <SettingsDialog />
+            <SettingsDialog variant='default' />
           </motion.div>
         </motion.div>
       </LayoutGroup>

@@ -12,7 +12,13 @@ import {
 
 import { useConfigStore } from '~/store/useConfigStore'
 
-export const SettingsDialog = () => {
+import { cn } from '~/lib/utils'
+
+type SettingsDialogProps = {
+  variant?: 'default' | 'small'
+}
+
+export const SettingsDialog = ({ variant = 'default' }: SettingsDialogProps) => {
   const {
     hoursToWork,
     setHoursToWork,
@@ -20,11 +26,16 @@ export const SettingsDialog = () => {
     setDefaultPercentage,
     exportWithCurrentDate,
     setExportWithCurrentDate,
+    exportWithTotalHours,
+    setExportWithTotalHours,
   } = useConfigStore()
 
   return (
     <Dialog>
-      <DialogTrigger title='Settings' className='cursor-pointer select-none text-5xl'>
+      <DialogTrigger
+        title='Settings'
+        className={cn('cursor-pointer select-none text-5xl', variant === 'small' && 'text-3xl')}
+      >
         ⚙️
       </DialogTrigger>
 
@@ -36,7 +47,7 @@ export const SettingsDialog = () => {
         </DialogHeader>
 
         <div className='space-y-3 divide-y divide-gray-300 dark:divide-gray-500'>
-          <div className='flex items-center justify-between pt-3'>
+          <div className='flex items-center justify-between pb-3'>
             <label htmlFor='hours-to-work' className='w-full cursor-pointer select-none'>
               Hours to work
             </label>
@@ -55,7 +66,7 @@ export const SettingsDialog = () => {
             />
           </div>
 
-          <div className='flex items-center justify-between pt-3'>
+          <div className='flex items-center justify-between pb-3'>
             <label htmlFor='default-percentage' className='w-full cursor-pointer select-none'>
               Default percentage
             </label>
@@ -74,12 +85,20 @@ export const SettingsDialog = () => {
             />
           </div>
 
-          <div className='flex items-center justify-between pt-3'>
+          <div className='flex items-center justify-between pb-3'>
             <label htmlFor='export-with-date' className='w-full cursor-pointer select-none'>
               Export with current date
             </label>
 
             <Toggle id='export-with-date' value={exportWithCurrentDate} onToggle={setExportWithCurrentDate} />
+          </div>
+
+          <div className='flex items-center justify-between pb-3'>
+            <label htmlFor='export-with-total-hours' className='w-full cursor-pointer select-none'>
+              Export with total hours
+            </label>
+
+            <Toggle id='export-with-total-hours' value={exportWithTotalHours} onToggle={setExportWithTotalHours} />
           </div>
         </div>
 
@@ -87,7 +106,7 @@ export const SettingsDialog = () => {
           <DialogClose asChild>
             <button
               type='button'
-              className='mt-5 self-end rounded-lg bg-gray-200 px-4 py-2 font-medium text-black text-xl transition-all ease-in hover:opacity-80 active:opacity-70'
+              className='mt-5 cursor-pointer self-end rounded-lg bg-gray-200 px-4 py-2 font-medium text-black text-xl transition-all ease-in hover:opacity-80 active:opacity-70'
             >
               Close
             </button>

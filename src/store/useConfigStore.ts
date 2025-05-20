@@ -8,6 +8,8 @@ type ConfigStore = {
   setDefaultPercentage: (percentage: number) => void
   exportWithCurrentDate: boolean
   setExportWithCurrentDate: (value: boolean) => void
+  exportWithTotalHours: boolean
+  setExportWithTotalHours: (value: boolean) => void
 }
 
 export const useConfigStore = create<ConfigStore>()(
@@ -19,6 +21,8 @@ export const useConfigStore = create<ConfigStore>()(
       setDefaultPercentage: (percentage) => set({ defaultPercentage: percentage }),
       exportWithCurrentDate: false,
       setExportWithCurrentDate: (value) => set({ exportWithCurrentDate: value }),
+      exportWithTotalHours: false,
+      setExportWithTotalHours: (value) => set({ exportWithTotalHours: value }),
     }),
     {
       name: 'config',
