@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
-import { ClipboardTextIcon } from '@phosphor-icons/react/dist/ssr'
-import { AnimatePresence, LayoutGroup, motion } from 'motion/react'
+import { ClipboardTextIcon, DotsSixVerticalIcon } from '@phosphor-icons/react'
+import { LayoutGroup, Reorder, motion, useDragControls } from 'motion/react'
 import { toast } from 'sonner'
 import { AddTaskButton } from '~/components/AddTaskButton'
 import { ExportButton } from '~/components/ExportButton'
@@ -23,8 +23,11 @@ import { useTaskStore } from '~/store/useTaskStore'
 
 export const App = () => {
   const { hoursToWork, setHoursToWork, exportWithCurrentDate, exportWithTotalHours } = useConfigStore()
-  const { tasks, addTask, removeTask, updateTask, resetTasks } = useTaskStore()
-  const [remainingTime, setRemainingTime] = useState(8)
+  const { tasks, addTask, removeTask, updateTask, resetTasks, reorderTasks } = useTaskStore()
+  const [remainingTime, setRemainingTime] = useState(hoursToWork)
+  const [isDragging, setIsDragging] = useState(false)
+
+  const dragControls = useDragControls()
 
   const dataLines = tasks.map(({ code, percentage, time }) => `${code}, ${percentage}%, ${time}`)
   const totalHours = tasks.reduce((sum, t) => sum + (t.time || 0), 0)
@@ -56,9 +59,8 @@ export const App = () => {
   }
 
   useEffect(() => {
-    const totalHours = tasks.reduce((acc, task) => acc + (task.time || 0), 0)
     setRemainingTime(hoursToWork - totalHours)
-  }, [tasks, hoursToWork])
+  }, [hoursToWork, totalHours])
 
   return (
     <main className='mx-auto min-h-screen max-w-(--breakpoint-lg) p-6'>
@@ -74,46 +76,47 @@ export const App = () => {
               max='12'
               maxLength={2}
               className='flex w-14 items-center rounded-xl px-2.5 py-1 text-4xl outline-none focus:border-gray-700 dark:bg-gray-700'
-              onChange={(e) => {
-                let value = e.target.value.slice(0, 2)
-                value = Math.min(Number.parseInt(value) || 0, 24).toString()
-                setHoursToWork(Number(value))
-              }}
+              onChange={(e) => setHoursToWork(Math.min(Math.max(+e.target.value || 0, 0), 24))}
             />
           </h2>
         </div>
 
         <motion.div className='mt-10 flex flex-col' layout>
-          <motion.div className='mb-6 flex flex-col space-y-4' layout>
-            <AnimatePresence>
-              {tasks.length ? (
-                tasks.map((task) => (
-                  <motion.div
-                    key={task.id}
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20, transition: { duration: 0.1 } }}
-                    transition={{ duration: 0.3 }}
-                    layout
+          <Reorder.Group axis='y' values={tasks} onReorder={reorderTasks} className='mb-6 flex flex-col space-y-4'>
+            {tasks.map((task) => (
+              <Reorder.Item
+                key={task.id}
+                value={task}
+                dragListener={true}
+                dragControls={dragControls}
+                onDragStart={() => setIsDragging(true)}
+                onDragEnd={() => setIsDragging(false)}
+                layout
+              >
+                <div className='relative'>
+                  <button
+                    type='button'
+                    className='-translate-y-1/2 -left-12 absolute top-1/2 cursor-grab p-2 active:cursor-grabbing'
                   >
-                    <TaskRow
-                      id={task.id}
-                      description={task.description}
-                      code={task.code}
-                      percentage={task.percentage}
-                      time={task.time}
-                      canDelete={tasks.length > 1}
-                      hoursToWork={hoursToWork}
-                      onChange={updateTask}
-                      onClose={() => removeTask(task.id)}
-                    />
-                  </motion.div>
-                ))
-              ) : (
-                <p className='text-2xl'>No tasks added.</p>
-              )}
-            </AnimatePresence>
-          </motion.div>
+                    <DotsSixVerticalIcon size={32} weight='bold' />
+                  </button>
+
+                  <TaskRow
+                    id={task.id}
+                    description={task.description}
+                    code={task.code}
+                    percentage={task.percentage}
+                    time={task.time}
+                    canDelete={tasks.length > 1}
+                    hoursToWork={hoursToWork}
+                    isDragging={isDragging}
+                    onChange={updateTask}
+                    onClose={() => removeTask(task.id)}
+                  />
+                </div>
+              </Reorder.Item>
+            ))}
+          </Reorder.Group>
 
           <motion.div className='flex items-center space-x-4' layout>
             <AddTaskButton onClick={addTask} />

@@ -12,6 +12,7 @@ interface TaskStore {
   removeTask: (id: string) => void
   updateTask: (id: string, key: keyof TaskEntity, value: any) => void
   resetTasks: () => void
+  reorderTasks: (newOrder: TaskEntity[]) => void
 }
 
 const createDefaultTask = (): TaskEntity => {
@@ -82,6 +83,8 @@ export const useTaskStore = create<TaskStore>()(
             ],
           }
         }),
+
+      reorderTasks: (newOrder) => set({ tasks: newOrder }),
     }),
     {
       name: 'tasks',

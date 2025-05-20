@@ -19,6 +19,7 @@ import type { TaskEntity } from '~/entities/TaskEntity'
 type TaskRowProps = TaskEntity & {
   canDelete: boolean
   hoursToWork: number
+  isDragging: boolean
   onChange: (id: string, key: keyof TaskEntity, value: string | number | undefined) => void
   onClose: () => void
 }
@@ -73,7 +74,14 @@ export const TaskRow = (props: TaskRowProps) => {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div aria-hidden className={cn('size-22 shrink-0 cursor-pointer rounded-lg', taskColor)} />
+                <div
+                  aria-hidden
+                  data-is-dragging={props.isDragging}
+                  className={cn(
+                    'size-22 shrink-0 cursor-pointer rounded-lg transition-all ease-in data-[is-dragging=true]:shadow-xl',
+                    taskColor
+                  )}
+                />
               </TooltipTrigger>
 
               <TooltipContent side='bottom'>
@@ -112,7 +120,7 @@ export const TaskRow = (props: TaskRowProps) => {
 
             <button
               type='button'
-              className='mt-3 self-end rounded-lg bg-gray-200 px-4 py-2 font-medium text-black text-lg transition-all ease-in hover:opacity-80 active:opacity-70'
+              className='mt-3 cursor-pointer self-end rounded-lg bg-gray-200 px-4 py-2 font-medium text-black text-lg transition-all ease-in hover:opacity-80 active:opacity-70'
               onClick={handleSaveDescription}
             >
               Save
@@ -122,12 +130,14 @@ export const TaskRow = (props: TaskRowProps) => {
       </Dialog>
 
       <TaskInput
+        isDragging={props.isDragging}
         placeholder='Task ID'
         value={props.code}
         onChange={(e) => props.onChange(props.id, 'code', e.target.value)}
       />
 
       <TaskInput
+        isDragging={props.isDragging}
         placeholder='Percentage %'
         type='number'
         value={props.percentage === 0 ? '' : props.percentage}
@@ -141,6 +151,7 @@ export const TaskRow = (props: TaskRowProps) => {
       />
 
       <TaskInput
+        isDragging={props.isDragging}
         placeholder='Time'
         type='number'
         value={props.time === 0 ? '' : props.time}
@@ -157,7 +168,7 @@ export const TaskRow = (props: TaskRowProps) => {
         type='button'
         title='Delete task'
         disabled={!props.canDelete}
-        className='cursor-pointer text-4xl disabled:cursor-not-allowed disabled:opacity-50'
+        className='cursor-pointer select-none text-4xl disabled:cursor-not-allowed disabled:opacity-50'
         onClick={props.onClose}
       >
         ❌
