@@ -25,6 +25,11 @@ export const App = () => {
   const { hoursToWork, setHoursToWork, exportWithCurrentDate, exportWithTotalHours } = useConfigStore()
   const { tasks, addTask, removeTask, updateTask, resetTasks, reorderTasks } = useTaskStore()
   const [remainingTime, setRemainingTime] = useState(hoursToWork)
+  const [hoursToWorkInput, setHoursToWorkInput] = useState(hoursToWork.toString())
+
+  useEffect(() => {
+    setHoursToWorkInput(hoursToWork.toString())
+  }, [hoursToWork])
 
   const dataLines = tasks.map(({ code, percentage, time }) => `${code}, ${percentage}%, ${time}`)
   const totalHours = tasks.reduce((sum, t) => sum + (t.time || 0), 0)
@@ -80,11 +85,42 @@ export const App = () => {
             <span>🕐Hours to work:</span>
 
             <input
-              value={hoursToWork}
+              type='text'
               max='12'
-              maxLength={2}
-              className='flex w-14 items-center rounded-xl px-2.5 py-1 text-4xl outline-none focus:border-gray-700 dark:bg-gray-700'
-              onChange={(e) => setHoursToWork(Math.min(Math.max(+e.target.value || 0, 0), 12))}
+              inputMode='decimal'
+              value={hoursToWorkInput}
+              placeholder='8'
+              className='flex w-20 items-center rounded-xl px-2.5 py-1 text-center text-4xl outline-none focus:border-gray-700 dark:bg-gray-700'
+              onChange={(e) => {
+                const val = e.target.value
+                if (/^\d*(?:[.,]\d*)?$/.test(val)) {
+                  if (val === '') {
+                    setHoursToWorkInput('0')
+                    setHoursToWork(0)
+                    return
+                  }
+                  setHoursToWorkInput(val)
+                  const normalized = val.replace(',', '.')
+                  const num = Number.parseFloat(normalized)
+                  if (!Number.isNaN(num)) {
+                    const clamped = Math.min(Math.max(num, 0), 12)
+                    setHoursToWork(clamped)
+                  }
+                }
+              }}
+              onBlur={() => {
+                let normalized = hoursToWorkInput.replace(',', '.')
+                if (/^[.,]$/.test(normalized)) normalized = '0'
+                if (/\.$/.test(normalized)) normalized = normalized.slice(0, -1)
+                const num = Number.parseFloat(normalized)
+                if (!Number.isNaN(num)) {
+                  const clamped = Math.min(Math.max(num, 0), 12)
+                  setHoursToWork(clamped)
+                  setHoursToWorkInput(clamped.toString())
+                } else {
+                  setHoursToWorkInput(hoursToWork.toString())
+                }
+              }}
             />
           </h2>
         </div>

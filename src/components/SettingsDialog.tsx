@@ -10,6 +10,7 @@ import {
   DialogTrigger,
 } from './ui/dialog'
 
+import { useEffect, useState } from 'react'
 import { useConfigStore } from '~/store/useConfigStore'
 
 import { cn } from '~/lib/utils'
@@ -29,6 +30,12 @@ export const SettingsDialog = ({ variant = 'default' }: SettingsDialogProps) => 
     exportWithTotalHours,
     setExportWithTotalHours,
   } = useConfigStore()
+
+  const [hoursToWorkInput, setHoursToWorkInput] = useState(hoursToWork.toString())
+
+  useEffect(() => {
+    setHoursToWorkInput(hoursToWork.toString())
+  }, [hoursToWork])
 
   return (
     <Dialog>
@@ -54,14 +61,42 @@ export const SettingsDialog = ({ variant = 'default' }: SettingsDialogProps) => 
 
             <input
               id='hours-to-work'
-              value={hoursToWork}
+              type='text'
+              placeholder='8'
               max='12'
-              maxLength={2}
-              className='flex w-20 items-center rounded-xl bg-gray-200 px-2.5 py-1 text-4xl outline-none focus:border-gray-600 dark:bg-gray-600'
+              inputMode='decimal'
+              value={hoursToWorkInput}
+              className='flex w-20 items-center rounded-xl bg-gray-200 px-2.5 py-1 text-center text-4xl outline-none focus:border-gray-600 dark:bg-gray-600'
               onChange={(e) => {
-                let value = e.target.value.slice(0, 2)
-                value = Math.min(Number.parseInt(value) || 0, 12).toString()
-                setHoursToWork(Number(value))
+                const val = e.target.value
+
+                if (/^\d*(?:[.,]\d*)?$/.test(val)) {
+                  if (val === '') {
+                    setHoursToWorkInput('0')
+                    setHoursToWork(0)
+                    return
+                  }
+                  setHoursToWorkInput(val)
+                  const normalized = val.replace(',', '.')
+                  const num = Number.parseFloat(normalized)
+                  if (!Number.isNaN(num)) {
+                    const clamped = Math.min(Math.max(num, 0), 12)
+                    setHoursToWork(clamped)
+                  }
+                }
+              }}
+              onBlur={() => {
+                let normalized = hoursToWorkInput.replace(',', '.')
+                if (/^[.,]$/.test(normalized)) normalized = '0'
+                if (/\.$/.test(normalized)) normalized = normalized.slice(0, -1)
+                const num = Number.parseFloat(normalized)
+                if (!Number.isNaN(num)) {
+                  const clamped = Math.min(Math.max(num, 0), 12)
+                  setHoursToWork(clamped)
+                  setHoursToWorkInput(clamped.toString())
+                } else {
+                  setHoursToWorkInput(hoursToWork.toString())
+                }
               }}
             />
           </div>
@@ -76,7 +111,7 @@ export const SettingsDialog = ({ variant = 'default' }: SettingsDialogProps) => 
               value={defaultPercentage}
               max='100'
               maxLength={3}
-              className='flex w-20 items-center rounded-xl bg-gray-200 px-2.5 py-1 text-4xl outline-none focus:border-gray-600 dark:bg-gray-600'
+              className='flex w-20 items-center rounded-xl bg-gray-200 px-2.5 py-1 text-center text-4xl outline-none focus:border-gray-600 dark:bg-gray-600'
               onChange={(e) => {
                 let value = e.target.value.slice(0, 3)
                 value = Math.min(Number.parseInt(value) || 0, 100).toString()
