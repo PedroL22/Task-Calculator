@@ -75,65 +75,103 @@ export const App = () => {
     reorderTasks(newTasks)
   }
 
+  const progress = Math.min((totalHours / hoursToWork) * 100 || 0, 100)
+
   return (
     <main className='mx-auto min-h-screen max-w-(--breakpoint-lg) p-6'>
       <LayoutGroup>
-        <div className='space-y-4'>
-          <h1 className='font-medium text-5xl'>⏳Remaining time: {remainingTime}</h1>
+        <div className='space-y-6 rounded-3xl border border-gray-300/60 bg-gradient-to-br from-gray-50/90 via-white/80 to-gray-100/70 p-8 shadow-lg backdrop-blur dark:border-gray-700/60 dark:from-gray-800/90 dark:via-gray-800/70 dark:to-gray-900/60'>
+          <div className='flex flex-col items-start gap-6 md:flex-row md:items-end md:justify-between'>
+            <div className='space-y-2'>
+              <h1 className='font-bold text-5xl'>⏳Task Calculator</h1>
 
-          <h2 className='flex items-center space-x-2 font-medium text-4xl'>
-            <span>🕐Hours to work:</span>
+              <p className='font-medium text-base text-gray-600 dark:text-gray-400'>
+                Organize, estimate and export your work hours.
+              </p>
+            </div>
 
-            <input
-              type='text'
-              max='12'
-              inputMode='decimal'
-              value={hoursToWorkInput}
-              placeholder='8'
-              className='flex w-20 items-center rounded-xl px-2.5 py-1 text-center text-4xl outline-none focus:border-gray-700 dark:bg-gray-700'
-              onChange={(e) => {
-                const val = e.target.value
-                if (/^\d*(?:[.,]\d*)?$/.test(val)) {
-                  if (val === '') {
-                    setHoursToWorkInput('0')
-                    setHoursToWork(0)
+            <div className='flex flex-col items-start gap-2 md:items-end'>
+              <span className='text-gray-500 text-sm uppercase tracking-wide dark:text-gray-400'>Remaining Time</span>
+              <div className='flex items-baseline gap-2'>
+                <span className='font-semibold text-4xl'>{remainingTime.toFixed(2)}</span>
+                <span className='text-base text-gray-500 dark:text-gray-400'>hrs</span>
+              </div>
+            </div>
+          </div>
+
+          <div className='space-y-3'>
+            <div className='flex items-center gap-4'>
+              <label htmlFor='hours-work-input' className='font-medium text-lg'>
+                🕐Hours to work
+              </label>
+              <input
+                id='hours-work-input'
+                type='text'
+                max='12'
+                inputMode='decimal'
+                value={hoursToWorkInput}
+                placeholder='8'
+                className='flex w-18 items-center rounded-lg border border-gray-300 bg-gray-200 px-3 py-1.5 text-center text-2xl outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100'
+                onChange={(e) => {
+                  const val = e.target.value
+                  if (/^\d*(?:[.,]?\d*)?$/.test(val)) {
+                    if (val === '') {
+                      setHoursToWorkInput('0')
+                      setHoursToWork(0)
+                      return
+                    }
+                    setHoursToWorkInput(val)
+                    if (/^[.,]$/.test(val) || /[.,]$/.test(val)) return
+                    const normalized = val.replace(',', '.')
+                    const num = Number.parseFloat(normalized)
+                    if (!Number.isNaN(num)) {
+                      const clamped = Math.min(Math.max(num, 0), 12)
+                      setHoursToWork(clamped)
+                    }
+                  }
+                }}
+                onBlur={() => {
+                  let val = hoursToWorkInput
+                  if (/^[.,]$/.test(val)) {
+                    setHoursToWorkInput(hoursToWork.toString())
                     return
                   }
-                  setHoursToWorkInput(val)
+                  if (/[.,]$/.test(val)) val = val.slice(0, -1)
                   const normalized = val.replace(',', '.')
                   const num = Number.parseFloat(normalized)
                   if (!Number.isNaN(num)) {
                     const clamped = Math.min(Math.max(num, 0), 12)
                     setHoursToWork(clamped)
+                    setHoursToWorkInput(clamped.toString())
+                  } else {
+                    setHoursToWorkInput(hoursToWork.toString())
                   }
-                }
-              }}
-              onBlur={() => {
-                let normalized = hoursToWorkInput.replace(',', '.')
-                if (/^[.,]$/.test(normalized)) normalized = '0'
-                if (/\.$/.test(normalized)) normalized = normalized.slice(0, -1)
-                const num = Number.parseFloat(normalized)
-                if (!Number.isNaN(num)) {
-                  const clamped = Math.min(Math.max(num, 0), 12)
-                  setHoursToWork(clamped)
-                  setHoursToWorkInput(clamped.toString())
-                } else {
-                  setHoursToWorkInput(hoursToWork.toString())
-                }
-              }}
-            />
-          </h2>
+                }}
+              />
+            </div>
+
+            <div className='h-3 w-full rounded-full bg-gray-200 dark:bg-gray-700'>
+              <div
+                className='h-full rounded-full bg-gradient-to-r from-emerald-500 via-emerald-400 to-sky-400 transition-all'
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <div className='flex justify-between text-gray-500 text-sm dark:text-gray-400'>
+              <span>Total logged: {totalHours.toFixed(2)}h</span>
+              <span>{progress.toFixed(1)}%</span>
+            </div>
+          </div>
         </div>
 
         <motion.div className='mt-10 flex flex-col' layout>
-          <div className='mb-6 flex flex-col space-y-4'>
+          <div className='mb-8 flex flex-col space-y-5'>
             {tasks.map((task, index) => (
               <motion.div key={task.id} layout className='relative flex items-center space-x-2'>
                 <div className='-left-12 absolute flex flex-col'>
                   <button
                     type='button'
                     title='Move up'
-                    className='cursor-pointer transition-all ease-in hover:opacity-80 disabled:cursor-not-allowed'
+                    className='cursor-pointer rounded-md p-1 text-gray-500 transition-all ease-in hover:bg-gray-300 hover:text-gray-800 active:scale-95 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40 dark:hover:bg-gray-700'
                     disabled={index === 0}
                     onClick={() => moveTask(index, -1)}
                   >
@@ -143,7 +181,7 @@ export const App = () => {
                   <button
                     type='button'
                     title='Move down'
-                    className='cursor-pointer transition-all ease-in hover:opacity-80 disabled:cursor-not-allowed'
+                    className='cursor-pointer rounded-md p-1 text-gray-500 transition-all ease-in hover:bg-gray-300 hover:text-gray-800 active:scale-95 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40 dark:hover:bg-gray-700'
                     disabled={index === tasks.length - 1}
                     onClick={() => moveTask(index, 1)}
                   >
@@ -166,7 +204,7 @@ export const App = () => {
             ))}
           </div>
 
-          <motion.div className='flex items-center space-x-4' layout>
+          <motion.div className='flex flex-wrap items-center gap-4' layout>
             <AddTaskButton onClick={addTask} />
 
             <Dialog>
@@ -174,7 +212,7 @@ export const App = () => {
                 <ExportButton disabled={tasks.some((task) => task.code === '' || !task.percentage || !task.time)} />
               </DialogTrigger>
 
-              <DialogContent className='border-none bg-white dark:bg-gray-700'>
+              <DialogContent className='border-none bg-white/90 backdrop-blur-sm dark:bg-gray-800/90'>
                 <DialogHeader>
                   <DialogTitle>Export tasks</DialogTitle>
 
@@ -183,11 +221,11 @@ export const App = () => {
                   </DialogDescription>
                 </DialogHeader>
 
-                <div className='relative flex flex-col rounded-lg bg-gray-200 p-3 text-xl dark:bg-gray-500 dark:text-gray-200'>
+                <div className='relative flex max-h-[320px] flex-col overflow-auto rounded-lg bg-gray-100 p-4 text-lg dark:bg-gray-700/70 dark:text-gray-200'>
                   <button
                     type='button'
                     title='Copy to clipboard'
-                    className='absolute top-2 right-2 cursor-pointer select-none rounded-full p-1 transition-all ease-in dark:active:bg-gray-700 dark:hover:bg-gray-600'
+                    className='absolute top-2 right-2 cursor-pointer select-none rounded-full p-1 text-gray-600 transition-all ease-in hover:bg-gray-200 hover:text-gray-900 active:scale-95 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-gray-100'
                     onClick={handleCopyToClipboard}
                   >
                     <ClipboardTextIcon size={28} />
@@ -202,7 +240,7 @@ export const App = () => {
 
                     <button
                       type='button'
-                      className='cursor-pointer rounded-lg bg-gray-200 px-4 py-2 font-medium text-black text-xl transition-all ease-in hover:opacity-80 active:opacity-70'
+                      className='cursor-pointer rounded-lg bg-gray-200 px-5 py-2 font-medium text-lg text-white shadow transition-all ease-in hover:bg-gray-300 active:scale-95 dark:bg-gray-700 dark:hover:bg-gray-600'
                       onClick={handleCopyToClipboard}
                     >
                       Copy
@@ -217,7 +255,9 @@ export const App = () => {
               onClick={resetTasks}
             />
 
-            <SettingsDialog variant='default' />
+            <div className='ml-auto flex items-center gap-4'>
+              <SettingsDialog variant='default' />
+            </div>
           </motion.div>
         </motion.div>
       </LayoutGroup>

@@ -1,13 +1,11 @@
 import type { ComponentProps } from 'react'
 
-export const ExportButton = (props: ComponentProps<'button'>) => {
-  return (
-    <button
-      {...props}
-      type='button'
-      className='w-fit cursor-pointer select-none rounded-2xl bg-sky-700 p-6 font-bold text-2xl text-gray-50 transition-all ease-in hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-60'
-    >
-      Export tasks
-    </button>
-  )
-}
+export const ExportButton = (props: ComponentProps<'button'>) => (
+  <button
+    {...props}
+    type='button'
+    className='inline-flex h-14 cursor-pointer select-none items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-sky-600 px-7 font-semibold text-white text-xl shadow-sm transition-all ease-in hover:bg-sky-700 hover:text-gray-300 active:scale-[.97] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60 dark:bg-sky-700 dark:hover:bg-sky-800'
+  >
+    Export
+  </button>
+)

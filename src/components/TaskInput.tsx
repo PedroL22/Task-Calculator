@@ -6,7 +6,14 @@ export const TaskInput = (props: TaskInputProps) => {
     <input
       {...props}
       placeholder={props.placeholder}
-      className='w-full rounded-xl border-4 bg-gray-200 p-5 text-4xl outline-none [appearance:textfield] focus:border-gray-400 dark:text-black dark:placeholder:text-gray-600 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
+      onWheel={(e) => {
+        if (props.type === 'number') {
+          e.preventDefault()
+          e.currentTarget.blur()
+        }
+        props.onWheel?.(e)
+      }}
+      className='w-full rounded-xl border border-gray-300 bg-gray-200 px-5 py-4 text-3xl leading-none outline-none [appearance:textfield] placeholder:text-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder:text-gray-500 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
     />
   )
 }

@@ -26,6 +26,14 @@ type TaskRowProps = TaskEntity & {
 export const TaskRow = (props: TaskRowProps) => {
   const [descriptionDialog, setDescriptionDialog] = useState(false)
   const [descriptionText, setDescriptionText] = useState(props.description || '')
+  const [percentageInput, setPercentageInput] = useState(
+    props.percentage == null || props.percentage === 0 || Number.isNaN(props.percentage)
+      ? ''
+      : props.percentage.toString()
+  )
+  const [timeInput, setTimeInput] = useState(
+    props.time == null || props.time === 0 || Number.isNaN(props.time) ? '' : props.time.toString()
+  )
 
   const getColorFromTime = (time: number, hoursToWork: number) => {
     const ratio = Math.min(time / hoursToWork, 1)
@@ -66,14 +74,42 @@ export const TaskRow = (props: TaskRowProps) => {
     setDescriptionText(props.description || '')
   }, [props.description])
 
+  useEffect(() => {
+    if (props.percentage == null || props.percentage === 0 || Number.isNaN(props.percentage)) {
+      setPercentageInput('')
+      return
+    }
+    const current = Number(percentageInput.replace(',', '.'))
+    if (props.percentage !== current) {
+      setPercentageInput(props.percentage.toString())
+    }
+  }, [props.percentage])
+
+  useEffect(() => {
+    if (props.time == null || props.time === 0 || Number.isNaN(props.time)) {
+      setTimeInput('')
+      return
+    }
+    const current = Number(timeInput.replace(',', '.'))
+    if (props.time !== current) {
+      setTimeInput(props.time.toString())
+    }
+  }, [props.time])
+
   return (
-    <div className='flex w-full items-center justify-between space-x-4'>
+    <div className='flex w-full items-center justify-between space-x-4 rounded-2xl border border-gray-300/60 bg-white/70 px-5 py-4 shadow-sm backdrop-blur dark:border-gray-600/50 dark:bg-gray-800/60'>
       <Dialog open={descriptionDialog} onOpenChange={setDescriptionDialog}>
         <DialogTrigger>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div aria-hidden className={cn('size-22 shrink-0 cursor-pointer rounded-lg', taskColor)} />
+                <div
+                  aria-hidden
+                  className={cn(
+                    'size-18 shrink-0 cursor-pointer rounded-lg ring-2 ring-transparent transition-all hover:brightness-110 focus-visible:outline-none focus-visible:ring-emerald-400',
+                    taskColor
+                  )}
+                />
               </TooltipTrigger>
 
               <TooltipContent side='bottom'>
@@ -129,27 +165,59 @@ export const TaskRow = (props: TaskRowProps) => {
 
       <TaskInput
         placeholder='Percentage %'
-        type='number'
-        value={props.percentage === 0 ? '' : props.percentage}
-        max='100'
-        maxLength={3}
+        type='text'
+        inputMode='numeric'
+        value={percentageInput}
+        maxLength={5}
         onChange={(e) => {
-          let value = e.target.value.slice(0, 3)
-          value = Math.min(Number.parseInt(value) || 0, 100).toString()
-          props.onChange(props.id, 'percentage', value)
+          const raw = e.target.value.replace(',', '.')
+          if (/^\d*(?:[.]?\d*)?$/.test(raw)) {
+            setPercentageInput(e.target.value)
+            if (raw === '' || raw === '.' || /\.$/.test(raw)) return
+            const num = Math.min(Math.max(Number.parseFloat(raw) || 0, 0), 100)
+            props.onChange(props.id, 'percentage', Number.isNaN(num) ? undefined : Math.round(num))
+          }
+        }}
+        onBlur={() => {
+          let raw = percentageInput.replace(',', '.')
+          if (raw === '' || raw === '.') {
+            setPercentageInput('')
+            props.onChange(props.id, 'percentage', undefined)
+            return
+          }
+          if (/\.$/.test(raw)) raw = raw.slice(0, -1)
+          const num = Math.min(Math.max(Number.parseFloat(raw) || 0, 0), 100)
+          setPercentageInput(num ? num.toString() : '')
+          props.onChange(props.id, 'percentage', num || undefined)
         }}
       />
 
       <TaskInput
         placeholder='Time'
-        type='number'
-        value={props.time === 0 ? '' : props.time}
-        max='12'
-        maxLength={4}
+        type='text'
+        inputMode='decimal'
+        value={timeInput}
+        maxLength={6}
         onChange={(e) => {
-          let value = e.target.value.slice(0, 4)
-          value = Math.min(Number.parseFloat(value) || 0, 12).toString()
-          props.onChange(props.id, 'time', value)
+          const raw = e.target.value.replace(',', '.')
+          if (/^\d*(?:[.]?\d*)?$/.test(raw)) {
+            setTimeInput(e.target.value)
+            if (raw === '' || raw === '.' || /\.$/.test(raw)) return
+            const num = Math.min(Math.max(Number.parseFloat(raw) || 0, 0), 12)
+            props.onChange(props.id, 'time', Number.isNaN(num) ? undefined : num)
+          }
+        }}
+        onBlur={() => {
+          let raw = timeInput.replace(',', '.')
+          if (raw === '' || raw === '.') {
+            setTimeInput('')
+            props.onChange(props.id, 'time', undefined)
+            return
+          }
+          if (/\.$/.test(raw)) raw = raw.slice(0, -1)
+          const num = Math.min(Math.max(Number.parseFloat(raw) || 0, 0), 12)
+          setTimeInput(num ? num.toString() : '')
+          props.onChange(props.id, 'time', num || undefined)
         }}
       />
 
@@ -157,7 +225,7 @@ export const TaskRow = (props: TaskRowProps) => {
         type='button'
         title='Delete task'
         disabled={!props.canDelete}
-        className='cursor-pointer select-none text-4xl disabled:cursor-not-allowed disabled:opacity-50'
+        className='cursor-pointer select-none rounded-lg p-2 text-2xl transition-all ease-in hover:bg-red-50 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 dark:hover:bg-red-950/40'
         onClick={props.onClose}
       >
         ❌

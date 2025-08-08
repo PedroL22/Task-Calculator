@@ -57,14 +57,15 @@ export const useTaskStore = create<TaskStore>()(
 
       updateTask: (id: string, key: keyof TaskEntity, value: any) =>
         set((state) => ({
-          tasks: state.tasks.map((task) =>
-            task.id === id
-              ? {
-                  ...task,
-                  [key]: key === 'time' || key === 'percentage' ? Number(value) : value,
-                }
-              : task
-          ),
+          tasks: state.tasks.map((task) => {
+            if (task.id !== id) return task
+            if (key === 'time' || key === 'percentage') {
+              if (value === undefined || value === null || value === '') return { ...task, [key]: undefined }
+              const num = Number(value)
+              return { ...task, [key]: Number.isNaN(num) ? undefined : num }
+            }
+            return { ...task, [key]: value }
+          }),
         })),
 
       resetTasks: () =>

@@ -66,17 +66,17 @@ export const SettingsDialog = ({ variant = 'default' }: SettingsDialogProps) => 
               max='12'
               inputMode='decimal'
               value={hoursToWorkInput}
-              className='flex w-20 items-center rounded-xl bg-gray-200 px-2.5 py-1 text-center text-4xl outline-none focus:border-gray-600 dark:bg-gray-600'
+              className='flex w-20 items-center rounded-xl bg-gray-200 px-2.5 py-1 text-center text-3xl outline-none focus:border-gray-600 dark:bg-gray-600'
               onChange={(e) => {
                 const val = e.target.value
-
-                if (/^\d*(?:[.,]\d*)?$/.test(val)) {
+                if (/^\d*(?:[.,]?\d*)?$/.test(val)) {
                   if (val === '') {
                     setHoursToWorkInput('0')
                     setHoursToWork(0)
                     return
                   }
                   setHoursToWorkInput(val)
+                  if (/^[.,]$/.test(val) || /[.,]$/.test(val)) return
                   const normalized = val.replace(',', '.')
                   const num = Number.parseFloat(normalized)
                   if (!Number.isNaN(num)) {
@@ -86,9 +86,13 @@ export const SettingsDialog = ({ variant = 'default' }: SettingsDialogProps) => 
                 }
               }}
               onBlur={() => {
-                let normalized = hoursToWorkInput.replace(',', '.')
-                if (/^[.,]$/.test(normalized)) normalized = '0'
-                if (/\.$/.test(normalized)) normalized = normalized.slice(0, -1)
+                let val = hoursToWorkInput
+                if (/^[.,]$/.test(val)) {
+                  setHoursToWorkInput(hoursToWork.toString())
+                  return
+                }
+                if (/[.,]$/.test(val)) val = val.slice(0, -1)
+                const normalized = val.replace(',', '.')
                 const num = Number.parseFloat(normalized)
                 if (!Number.isNaN(num)) {
                   const clamped = Math.min(Math.max(num, 0), 12)
@@ -111,7 +115,7 @@ export const SettingsDialog = ({ variant = 'default' }: SettingsDialogProps) => 
               value={defaultPercentage}
               max='100'
               maxLength={3}
-              className='flex w-20 items-center rounded-xl bg-gray-200 px-2.5 py-1 text-center text-4xl outline-none focus:border-gray-600 dark:bg-gray-600'
+              className='flex w-20 items-center rounded-xl bg-gray-200 px-2.5 py-1 text-center text-3xl outline-none focus:border-gray-600 dark:bg-gray-600'
               onChange={(e) => {
                 let value = e.target.value.slice(0, 3)
                 value = Math.min(Number.parseInt(value) || 0, 100).toString()

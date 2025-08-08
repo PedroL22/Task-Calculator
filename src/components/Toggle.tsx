@@ -25,13 +25,13 @@ export const Toggle = ({ id, value, onToggle }: ToggleProps) => {
 
         <div
           className={cn(
-            'block h-8 w-14 rounded-full transition-colors duration-300 ease-in-out',
+            'block h-8 w-14 rounded-full transition-all duration-300 ease-in',
             isOn ? 'bg-gray-600' : 'bg-gray-300'
           )}
         />
         <div
           className={cn(
-            'absolute top-1 left-1 h-6 w-6 rounded-full bg-white transition-transform duration-300 ease-in-out',
+            'absolute top-1 left-1 size-6 rounded-full bg-white transition-transform duration-300 ease-in-out',
             isOn && 'translate-x-6 transform'
           )}
         />
