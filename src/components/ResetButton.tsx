@@ -1,6 +1,5 @@
 import type { ComponentProps } from 'react'
 
-    >
 export const ResetButton = (props: ComponentProps<'button'>) => (
   <button
     {...props}
