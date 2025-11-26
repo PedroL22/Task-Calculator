@@ -104,6 +104,7 @@ export const App = () => {
               <label htmlFor='hours-work-input' className='font-medium text-lg'>
                 🕐Hours to work
               </label>
+
               <input
                 id='hours-work-input'
                 type='text'
@@ -156,6 +157,7 @@ export const App = () => {
                 style={{ width: `${progress}%` }}
               />
             </div>
+
             <div className='flex justify-between text-gray-500 text-sm dark:text-gray-400'>
               <span>Total logged: {totalHours.toFixed(2)}h</span>
               <span>{progress.toFixed(1)}%</span>
@@ -221,7 +223,7 @@ export const App = () => {
                   </DialogDescription>
                 </DialogHeader>
 
-                <div className='relative flex max-h-[320px] flex-col overflow-auto rounded-lg bg-gray-100 p-4 text-lg dark:bg-gray-700/70 dark:text-gray-200'>
+                <div className='relative flex max-h-[320px] flex-col overflow-auto rounded-lg bg-gray-200 p-4 text-lg dark:bg-gray-700/70 dark:text-gray-200'>
                   <button
                     type='button'
                     title='Copy to clipboard'
@@ -240,7 +242,7 @@ export const App = () => {
 
                     <button
                       type='button'
-                      className='cursor-pointer rounded-lg bg-emerald-500 px-5 py-2 font-medium text-lg text-white shadow transition-all ease-in hover:bg-emerald-600 active:scale-95'
+                      className='cursor-pointer rounded-lg bg-gray-200 px-5 py-2 font-medium text-gray-700 text-lg shadow transition-all ease-in hover:bg-gray-300 active:scale-95 active:opacity-70 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500'
                       onClick={handleCopyToClipboard}
                     >
                       Copy
