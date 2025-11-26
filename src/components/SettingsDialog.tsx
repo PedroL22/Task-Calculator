@@ -46,11 +46,13 @@ export const SettingsDialog = ({ variant = 'default' }: SettingsDialogProps) => 
         ⚙️
       </DialogTrigger>
 
-      <DialogContent aria-describedby='task calculator settings' className='border-0 pb-5 dark:bg-gray-700'>
+      <DialogContent aria-describedby='task calculator settings' className='border-0 bg-white pb-5 dark:bg-gray-700'>
         <DialogHeader>
           <DialogTitle>Task Calculator Settings</DialogTitle>
 
-          <DialogDescription className='dark:text-gray-400'>All changes are saved automatically.</DialogDescription>
+          <DialogDescription className='text-gray-500 dark:text-gray-400'>
+            All changes are saved automatically.
+          </DialogDescription>
         </DialogHeader>
 
         <div className='space-y-3 divide-y divide-gray-300 dark:divide-gray-500'>
@@ -145,7 +147,7 @@ export const SettingsDialog = ({ variant = 'default' }: SettingsDialogProps) => 
           <DialogClose asChild>
             <button
               type='button'
-              className='mt-5 cursor-pointer self-end rounded-lg bg-gray-200 px-4 py-2 font-medium text-black text-xl transition-all ease-in hover:opacity-80 active:opacity-70'
+              className='mt-5 cursor-pointer self-end rounded-lg bg-gray-200 px-4 py-2 font-medium text-gray-700 text-xl transition-all ease-in hover:bg-gray-300 active:opacity-70 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500'
             >
               Close
             </button>

@@ -240,7 +240,7 @@ export const App = () => {
 
                     <button
                       type='button'
-                      className='cursor-pointer rounded-lg bg-gray-200 px-5 py-2 font-medium text-lg text-white shadow transition-all ease-in hover:bg-gray-300 active:scale-95 dark:bg-gray-700 dark:hover:bg-gray-600'
+                      className='cursor-pointer rounded-lg bg-emerald-500 px-5 py-2 font-medium text-lg text-white shadow transition-all ease-in hover:bg-emerald-600 active:scale-95'
                       onClick={handleCopyToClipboard}
                     >
                       Copy

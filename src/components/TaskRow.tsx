@@ -119,7 +119,7 @@ export const TaskRow = (props: TaskRowProps) => {
           </TooltipProvider>
         </DialogTrigger>
 
-        <DialogContent className='border-0 pb-5 dark:bg-gray-700'>
+        <DialogContent className='border-0 bg-white pb-5 dark:bg-gray-700'>
           <DialogHeader>
             <DialogTitle>
               <label htmlFor='description-input' className='cursor-pointer select-none'>
@@ -127,7 +127,7 @@ export const TaskRow = (props: TaskRowProps) => {
               </label>
             </DialogTitle>
 
-            <DialogDescription className='dark:text-gray-400'>
+            <DialogDescription className='text-gray-500 dark:text-gray-400'>
               A brief summary of the task and its objectives.
             </DialogDescription>
           </DialogHeader>
@@ -136,7 +136,7 @@ export const TaskRow = (props: TaskRowProps) => {
             <input
               id='description-input'
               placeholder='Task description'
-              className='w-full resize-none rounded-md bg-gray-200 px-2.5 py-1.5 text-base text-black shadow-sm placeholder:text-gray-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-500 dark:text-gray-200'
+              className='w-full resize-none rounded-md bg-gray-100 px-2.5 py-1.5 text-base text-gray-900 shadow-sm placeholder:text-gray-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-500 dark:text-gray-200'
               value={descriptionText}
               onChange={(e) => setDescriptionText(e.target.value)}
               onKeyDown={(e) => {
@@ -148,7 +148,7 @@ export const TaskRow = (props: TaskRowProps) => {
 
             <button
               type='button'
-              className='mt-3 cursor-pointer self-end rounded-lg bg-gray-200 px-4 py-2 font-medium text-black text-lg transition-all ease-in hover:opacity-80 active:opacity-70'
+              className='mt-3 cursor-pointer self-end rounded-lg bg-emerald-500 px-4 py-2 font-medium text-lg text-white transition-all ease-in hover:bg-emerald-600 active:opacity-70'
               onClick={handleSaveDescription}
             >
               Save
