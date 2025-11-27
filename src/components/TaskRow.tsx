@@ -148,7 +148,7 @@ export const TaskRow = (props: TaskRowProps) => {
 
             <button
               type='button'
-              className='mt-3 cursor-pointer self-end rounded-lg bg-emerald-500 px-4 py-2 font-medium text-lg text-white transition-all ease-in hover:bg-emerald-600 active:opacity-70'
+              className='mt-3 cursor-pointer self-end rounded-lg bg-gray-200 px-4 py-2 font-medium text-gray-700 text-lg transition-all ease-in hover:bg-gray-300 active:opacity-70 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500'
               onClick={handleSaveDescription}
             >
               Save
